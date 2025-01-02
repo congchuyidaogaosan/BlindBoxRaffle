@@ -1,0 +1,15 @@
+<view class="container">
+  <view class="style-info" wx:if="{{styleInfo}}">
+    <image src="{{styleInfo.imageUrl}}" mode="aspectFill" class="style-image" />
+    <view class="info">
+      <text class="name">{{styleInfo.name}}</text>
+      <text class="price">￥{{styleInfo.price}}</text>
+      <text class="probability">{{styleInfo.probability}}%</text>
+    </view>
+    <button class="draw-btn" bindtap="handlePay">立即抽取</button>
+  </view>
+  
+  <view class="loading" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+</view> 

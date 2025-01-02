@@ -1,0 +1,41 @@
+.style-list {
+  padding: 20rpx;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20rpx;
+}
+
+.style-item {
+  background: #fff;
+  border-radius: 12rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.1);
+}
+
+.style-image {
+  width: 100%;
+  height: 300rpx;
+}
+
+.info {
+  padding: 20rpx;
+}
+
+.name {
+  font-size: 28rpx;
+  color: #333;
+  display: block;
+  margin-bottom: 10rpx;
+}
+
+.price {
+  font-size: 32rpx;
+  color: #f56c6c;
+  font-weight: bold;
+  margin-right: 20rpx;
+}
+
+.probability {
+  font-size: 24rpx;
+  color: #909399;
+} 

@@ -1,0 +1,30 @@
+<view class="container">
+  <view class="style-info">
+    <image src="{{styleInfo.imageUrl}}" mode="aspectFill" class="style-image" />
+    <view class="info">
+      <text class="name">{{styleInfo.name}}</text>
+      <text class="price">￥{{styleInfo.price}}</text>
+    </view>
+  </view>
+  
+  <view class="review-form">
+    <view class="rating">
+      <text>评分：</text>
+      <view class="stars">
+        <view class="star {{index < rating ? 'active' : ''}}" 
+              wx:for="{{5}}" 
+              wx:key="index"
+              bindtap="setRating"
+              data-rating="{{index + 1}}">★</view>
+      </view>
+    </view>
+    
+    <view class="content">
+      <textarea placeholder="请输入评价内容" 
+                value="{{content}}"
+                bindinput="setContent" />
+    </view>
+    
+    <button class="submit-btn" bindtap="handleSubmit">提交评价</button>
+  </view>
+</view> 

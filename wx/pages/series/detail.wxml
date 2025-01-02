@@ -1,0 +1,16 @@
+<view class="container">
+  <view class="style-list">
+    <view class="style-item" 
+          wx:for="{{styleList}}" 
+          wx:key="id"
+          data-id="{{item.id}}"
+          bindtap="handleDraw">
+      <image src="{{item.imageUrl}}" mode="aspectFill" class="style-image" />
+      <view class="info">
+        <text class="name">{{item.name}}</text>
+        <text class="price">￥{{item.price}}</text>
+        <text class="probability">{{item.probability}}%</text>
+      </view>
+    </view>
+  </view>
+</view> 

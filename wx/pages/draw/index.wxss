@@ -1,0 +1,41 @@
+.style-info {
+  padding: 30rpx;
+  background: #fff;
+  border-radius: 12rpx;
+  margin: 20rpx;
+}
+
+.style-image {
+  width: 100%;
+  height: 400rpx;
+  border-radius: 8rpx;
+}
+
+.info {
+  margin-top: 20rpx;
+}
+
+.name {
+  font-size: 32rpx;
+  color: #333;
+  display: block;
+  margin-bottom: 10rpx;
+}
+
+.price {
+  font-size: 36rpx;
+  color: #f56c6c;
+  font-weight: bold;
+  margin-right: 20rpx;
+}
+
+.probability {
+  font-size: 28rpx;
+  color: #909399;
+}
+
+.draw-btn {
+  margin-top: 30rpx;
+  background: #409EFF;
+  color: #fff;
+} 

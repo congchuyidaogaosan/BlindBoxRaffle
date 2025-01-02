@@ -1,0 +1,15 @@
+<view class="container">
+  <view class="result" wx:if="{{result}}">
+    <view class="congrats">恭喜你抽中了</view>
+    <image src="{{result.boxStyle.imageUrl}}" mode="aspectFill" class="result-image" />
+    <view class="info">
+      <text class="name">{{result.boxStyle.name}}</text>
+      <text class="price">￥{{result.boxStyle.price}}</text>
+    </view>
+    <button class="back-btn" bindtap="handleBack">返回</button>
+  </view>
+  
+  <view class="loading" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+</view> 
