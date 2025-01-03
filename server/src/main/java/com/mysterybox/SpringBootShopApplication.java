@@ -6,10 +6,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 @MapperScan(basePackages = "com.mysterybox")
-public class FlowerShopApplication {
+public class SpringBootShopApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(FlowerShopApplication.class, args);
+        SpringApplication.run(SpringBootShopApplication.class, args);
     }
 
 }

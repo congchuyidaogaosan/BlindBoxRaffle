@@ -2,7 +2,7 @@ package com.mysterybox.controller;
 
 import com.mysterybox.entity.User;
 import com.mysterybox.service.UserService;
-import com.mysterybox.util.JwtUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,35 +17,33 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-    @Autowired
-    private AuthenticationManager authenticationManager;
-    
+//    @Autowired
+//    private AuthenticationManager authenticationManager;
+
     @Autowired
     private UserService userService;
-    
-    @Autowired
-    private JwtUtil jwtUtil;
+
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(
-                loginRequest.getUsername(),
-                loginRequest.getPassword()
-            )
-        );
+    public ResponseEntity<?> login(@Valid @RequestBody User loginRequest) {
+//        Authentication authentication = authenticationManager.authenticate(
+//                new UsernamePasswordAuthenticationToken(
+//                        loginRequest.getUsername(),
+//                        loginRequest.getPassword()
+//                )
+//        );
 
-        String jwt = jwtUtil.generateToken(authentication);
-        
+//        String jwt = jwtUtil.generateToken(authentication);
+
         Map<String, Object> response = new HashMap<>();
-        response.put("token", jwt);
+        response.put("token", null);
         response.put("type", "Bearer");
-        
+
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<?> register(@Valid @RequestBody User registerRequest) {
         if (userService.existsByUsername(registerRequest.getUsername())) {
             return ResponseEntity.badRequest().body("Username is already taken");
         }
@@ -55,9 +53,9 @@ public class AuthController {
         user.setPassword(registerRequest.getPassword());
         user.setNickname(registerRequest.getNickname());
         user.setPhone(registerRequest.getPhone());
-        
+
         userService.createUser(user);
-        
+
         return ResponseEntity.ok("User registered successfully");
     }
 } 

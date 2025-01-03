@@ -1,5 +1,6 @@
 package com.mysterybox.service.impl;
 
+import com.mysterybox.entity.Order;
 import com.mysterybox.entity.PaymentRecord;
 import com.mysterybox.entity.RechargeRecord;
 import com.mysterybox.entity.User;
@@ -36,8 +37,14 @@ public class PaymentServiceImpl implements PaymentService {
         userService.updateBalance(userId, user.getBalance().subtract(amount));
         
         PaymentRecord record = new PaymentRecord();
-        record.setUserId(userId);
-        record.setOrderId(orderId);
+        User user1 = new User();
+        user1.setId(userId);
+        record.setUser(user1);
+
+        Order order = new Order();
+        order.setId(orderId);
+
+        record.setOrder(order);
         record.setAmount(amount);
         record.setStatus("SUCCESS");
         return paymentRecordRepository.save(record);
@@ -49,7 +56,9 @@ public class PaymentServiceImpl implements PaymentService {
         userService.updateBalance(userId, user.getBalance().add(amount));
         
         RechargeRecord record = new RechargeRecord();
-        record.setUserId(userId);
+        User user1 = new User();
+        user1.setId(userId);
+        record.setUser(user1);
         record.setAmount(amount);
         return rechargeRecordRepository.save(record);
     }

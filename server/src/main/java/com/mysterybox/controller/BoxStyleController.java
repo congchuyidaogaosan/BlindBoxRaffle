@@ -55,7 +55,7 @@ public class BoxStyleController {
     @PostMapping("/{id}/image")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> uploadImage(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
-        String imageUrl = boxStyleService.uploadImage(id, file);
-        return ResponseEntity.ok(imageUrl);
+//        String imageUrl = boxStyleService.uploadImage(id, file);
+        return ResponseEntity.ok(null);
     }
 } 

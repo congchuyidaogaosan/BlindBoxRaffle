@@ -15,10 +15,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/draw")
 public class DrawController {
-    
+
     @Autowired
     private DrawService drawService;
-    
+
     @PostMapping("/{seriesId}")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<DrawResult> draw(
@@ -26,7 +26,7 @@ public class DrawController {
             @PathVariable Long seriesId) {
         return ResponseEntity.ok(drawService.draw(Long.valueOf(userDetails.getUsername()), seriesId));
     }
-    
+
     @PostMapping("/{seriesId}/multiple/{count}")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<List<DrawResult>> drawMultiple(
@@ -35,9 +35,10 @@ public class DrawController {
             @PathVariable int count) {
         return ResponseEntity.ok(drawService.drawMultiple(Long.valueOf(userDetails.getUsername()), seriesId, count));
     }
-    
+
     @GetMapping("/history/{userId}")
     public ResponseEntity<List<BoxStyle>> getDrawHistory(@PathVariable Long userId) {
-        return ResponseEntity.ok(drawService.getUserDrawHistory(userId));
+//        return ResponseEntity.ok(drawService(userId));
+        return null;
     }
 } 
