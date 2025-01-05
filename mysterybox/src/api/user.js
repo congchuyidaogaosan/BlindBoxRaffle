@@ -8,13 +8,6 @@ export function login(data) {
   })
 }
 
-export function register(data) {
-  return request({
-    url: '/api/auth/register',
-    method: 'post',
-    data
-  })
-}
 
 export function getUserInfo() {
   return request({

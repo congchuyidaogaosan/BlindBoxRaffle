@@ -1,7 +1,7 @@
 package com.mysterybox.service.impl;
 
 import com.mysterybox.entity.BoxSeries;
-import com.mysterybox.repository.BoxSeriesRepository;
+import com.mysterybox.mapper.BoxSeriesRepository;
 import com.mysterybox.service.BoxSeriesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

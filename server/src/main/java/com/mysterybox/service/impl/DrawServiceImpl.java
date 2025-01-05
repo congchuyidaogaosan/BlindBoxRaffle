@@ -7,12 +7,11 @@ import com.mysterybox.dto.DrawResult;
 import com.mysterybox.service.DrawService;
 import com.mysterybox.service.UserService;
 import com.mysterybox.service.OrderService;
-import com.mysterybox.repository.BoxStyleRepository;
+import com.mysterybox.mapper.BoxStyleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;

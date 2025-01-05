@@ -1,7 +1,7 @@
 package com.mysterybox.service.impl;
 
 import com.mysterybox.entity.BoxStyle;
-import com.mysterybox.repository.BoxStyleRepository;
+import com.mysterybox.mapper.BoxStyleRepository;
 import com.mysterybox.service.BoxStyleService;
 import com.mysterybox.dto.DrawPreference;
 import com.mysterybox.dto.PopularStyle;

@@ -2,8 +2,8 @@ package com.mysterybox.service.impl;
 
 import com.mysterybox.entity.Order;
 import com.mysterybox.entity.OrderDetail;
-import com.mysterybox.repository.OrderRepository;
-import com.mysterybox.repository.OrderDetailRepository;
+import com.mysterybox.mapper.OrderRepository;
+import com.mysterybox.mapper.OrderDetailRepository;
 import com.mysterybox.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

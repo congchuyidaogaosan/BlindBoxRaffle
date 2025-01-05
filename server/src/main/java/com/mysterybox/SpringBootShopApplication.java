@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@MapperScan(basePackages = "com.mysterybox")
+@MapperScan(basePackages = "com.mysterybox.mapper")
 public class SpringBootShopApplication {
 
     public static void main(String[] args) {

@@ -13,12 +13,14 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/styles")
 public class BoxStyleController {
+
     @Autowired
     private BoxStyleService boxStyleService;
 
     @GetMapping
     public Result<List<BoxStyle>> getAllStyles() {
-        return Result.success(boxStyleService.getAllStyles());
+        List<BoxStyle> styleList = boxStyleService.getAllStyles();
+        return Result.success(styleList);
     }
 
     @GetMapping("/{id}")
@@ -37,24 +39,27 @@ public class BoxStyleController {
 
     @PostMapping
     public Result<BoxStyle> createStyle(@Valid @RequestBody BoxStyle style) {
-        return Result.success("创建成功", boxStyleService.createStyle(style));
+        BoxStyle savedStyle = boxStyleService.createStyle(style);
+        return Result.success("创建款式成功", savedStyle);
     }
 
     @PutMapping("/{id}")
     public Result<BoxStyle> updateStyle(@PathVariable Long id, @Valid @RequestBody BoxStyle style) {
         style.setId(id);
-        return Result.success("更新成功", boxStyleService.updateStyle(style));
+        BoxStyle updatedStyle = boxStyleService.updateStyle(style);
+        return Result.success("更新款式成功", updatedStyle);
     }
 
     @DeleteMapping("/{id}")
     public Result<Void> deleteStyle(@PathVariable Long id) {
         boxStyleService.deleteStyle(id);
-        return Result.success("删除成功", null);
+        return Result.success("删除款式成功", null);
     }
 
     @PostMapping("/{id}/image")
     public Result<String> uploadImage(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
+    //mei you  zhe ge fang  fa
 //        String imageUrl = boxStyleService.uploadImage(id, file);
-        return Result.success("上传成功", null);
+        return Result.success("上传图片成功", "");
     }
 } 

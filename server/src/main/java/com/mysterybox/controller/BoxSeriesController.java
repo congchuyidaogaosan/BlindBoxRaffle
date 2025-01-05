@@ -10,7 +10,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/box-series")
+@RequestMapping("/api/series")
 public class BoxSeriesController {
     
     @Autowired

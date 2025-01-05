@@ -30,7 +30,7 @@
               <span>订单管理</span>
             </template>
             <el-menu-item index="/orders">订单列表</el-menu-item>
-            <el-menu-item index="/payments">支付记录</el-menu-item>
+
           </el-submenu>
 
           <el-menu-item index="/users">
@@ -45,11 +45,10 @@
         </el-menu>
       </el-aside>
 
-      <!-- <el-container> -->
+      <el-container class="main-container">
         <el-header>
           <div class="header-left">
             <i class="el-icon-s-fold"></i>
-            
           </div>
           <div class="header-right">
             <span>{{ userInfo?.username }}</span>
@@ -68,18 +67,14 @@
         <el-main>
           <router-view></router-view>
         </el-main>
-      <!-- </el-container> -->
+      </el-container>
     </el-container>
   </div>
 </template>
 
 <script>
-
 export default {
   name: 'LayoutView',
-  components: {
-
-  },
   computed: {
     userInfo() {
       return this.$store.getters['user/getUserInfo']
@@ -112,6 +107,7 @@ export default {
   position: fixed;
   left: 0;
   top: 0;
+  z-index: 10;
 }
 
 .el-menu {
@@ -122,8 +118,9 @@ export default {
   height: 100%;
 }
 
-.el-container {
+.main-container {
   margin-left: 200px;
+  min-height: 100vh;
 }
 
 .el-header {
@@ -134,6 +131,10 @@ export default {
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 1px 4px rgba(0,21,41,.08);
+  position: fixed;
+  width: calc(100% - 200px);
+  top: 0;
+  z-index: 9;
 }
 
 .header-left {
@@ -164,6 +165,7 @@ export default {
 .el-main {
   background-color: #f0f2f5;
   padding: 20px;
+  margin-top: 60px;
   min-height: calc(100vh - 60px);
 }
 </style> 
