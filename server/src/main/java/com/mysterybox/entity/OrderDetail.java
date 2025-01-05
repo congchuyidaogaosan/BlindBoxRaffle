@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 public class OrderDetail extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
-    private Order order;
+    private orders order;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "box_style_id")

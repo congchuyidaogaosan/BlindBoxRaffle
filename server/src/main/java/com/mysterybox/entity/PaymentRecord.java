@@ -14,7 +14,7 @@ public class PaymentRecord extends BaseEntity {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
-    private Order order;
+    private orders order;
     
     private BigDecimal amount;
     private String status;  // SUCCESS, FAILED

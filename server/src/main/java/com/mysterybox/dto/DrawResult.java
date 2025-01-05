@@ -1,7 +1,8 @@
 package com.mysterybox.dto;
 
 import com.mysterybox.entity.BoxStyle;
-import com.mysterybox.entity.Order;
+
+import com.mysterybox.entity.orders;
 import lombok.Data;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -11,5 +12,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class DrawResult {
     private BoxStyle style;
-    private Order order;
+    private orders order;
 } 

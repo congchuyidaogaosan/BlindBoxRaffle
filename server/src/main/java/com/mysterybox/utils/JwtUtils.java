@@ -8,17 +8,17 @@ import java.util.Date;
 
 @Component
 public class JwtUtils {
-    @Value("${jwt.secret}")
-    private String jwtSecret;
+//    @Value("${jwt.secret}")
+    private String jwtSecret="1313224343345436";
 
-    @Value("${jwt.expiration}")
-    private int jwtExpirationMs;
+//    @Value("${jwt.expiration}")
+//    private int jwtExpirationMs;
 
     public String generateToken(String username) {
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
+                .setExpiration(new Date((new Date()).getTime()))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }

@@ -45,15 +45,15 @@ public class AuthController {
             if (!encoder.matches(loginRequest.getPassword(), user.getPassword())) {
                 return Result.error(400, "密码错误");
             }
-
-            // 生成JWT token
+//
+////            // 生成JWT token
             String token = jwtUtils.generateToken(user.getUsername());
 
             // 构建响应
             Map<String, Object> response = new HashMap<>();
             response.put("token", token);
             response.put("type", "Bearer");
-            
+
             // 移除敏感信息
             user.setPassword(null);
             response.put("userInfo", user);
@@ -74,10 +74,10 @@ public class AuthController {
         try {
             // 加密密码
             registerRequest.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-            
+
             User user = userService.createUser(registerRequest);
             user.setPassword(null); // 移除密码后返回
-            
+
             return Result.success("注册成功", user);
         } catch (Exception e) {
             return Result.error("注册失败：" + e.getMessage());

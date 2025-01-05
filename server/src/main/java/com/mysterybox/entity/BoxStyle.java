@@ -1,5 +1,6 @@
 package com.mysterybox.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -10,6 +11,7 @@ import java.math.BigDecimal;
 public class BoxStyle extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "series_id")
+    @TableField(exist = false)
     private BoxSeries series;
     
     private String name;

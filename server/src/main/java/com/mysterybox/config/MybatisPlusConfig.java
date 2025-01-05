@@ -1,4 +1,4 @@
-package com.it.system.config;
+package com.mysterybox.config;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;

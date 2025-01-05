@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mysterybox.mapper.OrderMapper">
-    <resultMap id="orderMap" type="com.mysterybox.entity.Order">
+    <resultMap id="orderMap" type="com.mysterybox.entity.orders">
         <id property="id" column="id"/>
         <result property="userId" column="user_id"/>
         <result property="totalAmount" column="total_amount"/>
@@ -54,12 +54,12 @@
         WHERE o.create_time BETWEEN #{startTime} AND #{endTime}
     </select>
     
-    <insert id="insert" parameterType="com.mysterybox.entity.Order" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" parameterType="com.mysterybox.entity.orders" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO orders (user_id, total_amount, status)
         VALUES (#{userId}, #{totalAmount}, #{status})
     </insert>
     
-    <update id="update" parameterType="com.mysterybox.entity.Order">
+    <update id="update" parameterType="com.mysterybox.entity.orders">
         UPDATE orders
         SET total_amount = #{totalAmount},
             status = #{status},

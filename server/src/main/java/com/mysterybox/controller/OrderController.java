@@ -1,7 +1,8 @@
 package com.mysterybox.controller;
 
 import com.mysterybox.common.Result;
-import com.mysterybox.entity.Order;
+
+import com.mysterybox.entity.orders;
 import com.mysterybox.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,14 +18,14 @@ public class OrderController {
     private OrderService orderService;
 
     @GetMapping
-    public Result<List<Order>> getOrders() {
-        List<Order> orders = orderService.getAllOrders();
+    public Result<List<orders>> getOrders() {
+        List<orders> orders = orderService.getAllOrders();
         return Result.success(orders);
     }
 
     @GetMapping("/{id}")
-    public Result<Order> getOrderById(@PathVariable Long id) {
-        Order order = orderService.getOrderById(id);
+    public Result<orders> getOrderById(@PathVariable Long id) {
+        orders order = orderService.getOrderById(id);
         if (order == null) {
             return Result.error(404, "订单不存在");
         }
@@ -32,15 +33,15 @@ public class OrderController {
     }
 
     @PostMapping
-    public Result<Order> createOrder(@Valid @RequestBody Order order) {
-        Order savedOrder = orderService.createOrder(order);
+    public Result<orders> createOrder(@Valid @RequestBody orders order) {
+        orders savedOrder = orderService.createOrder(order);
         return Result.success("创建订单成功", savedOrder);
     }
 
     @PutMapping("/{id}")
-    public Result<Order> updateOrder(@PathVariable Long id, @Valid @RequestBody Order order) {
+    public Result<orders> updateOrder(@PathVariable Long id, @Valid @RequestBody orders order) {
         order.setId(id);
-        Order updatedOrder = orderService.updateOrder(order);
+        orders updatedOrder = orderService.updateOrder(order);
         return Result.success("更新订单成功", updatedOrder);
     }
 

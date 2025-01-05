@@ -10,7 +10,7 @@ public interface ReviewMapper {
     List<Review> findAll();
     Review findById(@Param("id") Long id);
     List<Review> findByUserId(@Param("userId") Long userId);
-    List<Review> findByBoxStyleId(@Param("styleId") Long styleId);
+
     void insert(Review review);
     void update(Review review);
     void delete(@Param("id") Long id);
