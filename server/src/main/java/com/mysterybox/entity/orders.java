@@ -8,7 +8,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "orders")
-public class Order extends BaseEntity {
+public class orders extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
