@@ -1,31 +1,22 @@
 import request from '@/utils/request'
 
-export function getSeriesList() {
+export function getHotSeries() {
+  return request({
+    url: '/api/series/hot',
+    method: 'get'
+  })
+}
+
+export function getAllSeries() {
   return request({
     url: '/api/series',
     method: 'get'
   })
 }
 
-export function createSeries(data) {
-  return request({
-    url: '/api/series',
-    method: 'post',
-    data
-  })
-}
-
-export function updateSeries(id, data) {
+export function getSeriesById(id) {
   return request({
     url: `/api/series/${id}`,
-    method: 'put',
-    data
-  })
-}
-
-export function deleteSeries(id) {
-  return request({
-    url: `/api/series/${id}`,
-    method: 'delete'
+    method: 'get'
   })
 } 

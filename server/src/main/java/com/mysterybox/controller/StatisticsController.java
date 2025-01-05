@@ -1,12 +1,11 @@
 package com.mysterybox.controller;
 
+import com.mysterybox.common.Result;
 import com.mysterybox.dto.DrawPreference;
 import com.mysterybox.dto.PopularStyle;
 import com.mysterybox.service.StatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -16,28 +15,40 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/statistics")
-@PreAuthorize("hasRole('ADMIN')")
 public class StatisticsController {
     @Autowired
     private StatisticsService statisticsService;
 
     @GetMapping("/overview")
-    public ResponseEntity<Map<String, Object>> getOverview(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime since) {
+    public Result<Map<String, Object>> getOverview(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime since) {
         Map<String, Object> statistics = new HashMap<>();
-        statistics.put("newUsers", statisticsService.countNewUsers(since));
-        statistics.put("activeUsers", statisticsService.countActiveUsers(since));
-        statistics.put("orders", statisticsService.countOrders(since));
-        return ResponseEntity.ok(statistics);
+        
+        // 今日数据
+        statistics.put("todayOrders", statisticsService.countOrders(LocalDateTime.now()));
+        statistics.put("todaySales", statisticsService.countSales(LocalDateTime.now()));
+        statistics.put("newUsers", statisticsService.countNewUsers(LocalDateTime.now()));
+        statistics.put("draws", statisticsService.countDraws(LocalDateTime.now()));
+        
+        // 同比数据
+        statistics.put("orderChange", statisticsService.getOrderChange());
+        statistics.put("salesChange", statisticsService.getSalesChange());
+        statistics.put("userChange", statisticsService.getUserChange());
+        statistics.put("drawChange", statisticsService.getDrawChange());
+        
+        // 销售趋势
+        statistics.put("salesTrend", statisticsService.getSalesTrend());
+        
+        return Result.success(statistics);
     }
 
     @GetMapping("/preferences")
-    public ResponseEntity<List<DrawPreference>> getDrawPreferences() {
-        return ResponseEntity.ok(statisticsService.getDrawPreferences());
+    public Result<List<DrawPreference>> getDrawPreferences() {
+        return Result.success(statisticsService.getDrawPreferences());
     }
 
     @GetMapping("/popular")
-    public ResponseEntity<List<PopularStyle>> getPopularStyles() {
-        return ResponseEntity.ok(statisticsService.getPopularStyles());
+    public Result<List<PopularStyle>> getPopularStyles() {
+        return Result.success(statisticsService.getPopularStyles());
     }
 } 

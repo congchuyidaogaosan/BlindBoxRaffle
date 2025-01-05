@@ -1,16 +1,14 @@
 package com.mysterybox.controller;
 
+import com.mysterybox.common.Result;
 import com.mysterybox.entity.PaymentRecord;
 import com.mysterybox.entity.RechargeRecord;
 import com.mysterybox.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -21,38 +19,39 @@ public class PaymentController {
     private PaymentService paymentService;
 
     @PostMapping("/pay")
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<PaymentRecord> pay(
+    public Result<PaymentRecord> pay(
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestParam Long orderId,
             @RequestParam BigDecimal amount) {
-        return ResponseEntity.ok(paymentService.pay(Long.valueOf(userDetails.getUsername()), orderId, amount));
+        PaymentRecord record = paymentService.pay(Long.valueOf(userDetails.getUsername()), orderId, amount);
+        return Result.success("支付成功", record);
     }
 
     @PostMapping("/recharge")
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<RechargeRecord> recharge(
+    public Result<RechargeRecord> recharge(
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestParam BigDecimal amount) {
-        return ResponseEntity.ok(paymentService.recharge(Long.valueOf(userDetails.getUsername()), amount));
+        RechargeRecord record = paymentService.recharge(Long.valueOf(userDetails.getUsername()), amount);
+        return Result.success("充值成功", record);
     }
 
     @GetMapping("/user/payments")
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<List<PaymentRecord>> getUserPayments(
+    public Result<List<PaymentRecord>> getUserPayments(
             @AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(paymentService.getUserPayments(Long.valueOf(userDetails.getUsername())));
+        List<PaymentRecord> records = paymentService.getUserPayments(Long.valueOf(userDetails.getUsername()));
+        return Result.success(records);
     }
 
     @GetMapping("/user/recharges")
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<List<RechargeRecord>> getUserRecharges(
+    public Result<List<RechargeRecord>> getUserRecharges(
             @AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(paymentService.getUserRecharges(Long.valueOf(userDetails.getUsername())));
+        List<RechargeRecord> records = paymentService.getUserRecharges(Long.valueOf(userDetails.getUsername()));
+        return Result.success(records);
     }
 
     @GetMapping("/order/{orderId}")
-    public ResponseEntity<List<PaymentRecord>> getOrderPayments(@PathVariable Long orderId) {
-        return ResponseEntity.ok(paymentService.getOrderPayments(orderId));
+    public Result<List<PaymentRecord>> getOrderPayments(@PathVariable Long orderId) {
+        List<PaymentRecord> records = paymentService.getOrderPayments(orderId);
+        return Result.success(records);
     }
 } 

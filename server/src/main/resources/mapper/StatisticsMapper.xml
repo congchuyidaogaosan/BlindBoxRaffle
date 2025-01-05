@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mysterybox.mapper.StatisticsMapper">
+    
+    <select id="countOrders" resultType="Long">
+        SELECT COUNT(*) 
+        FROM orders 
+        WHERE create_time >= #{since}
+    </select>
+    
+    <select id="countSales" resultType="Double">
+        SELECT COALESCE(SUM(total_amount), 0) 
+        FROM orders 
+        WHERE create_time >= #{since}
+        AND status = 'COMPLETED'
+    </select>
+    
+    <select id="countNewUsers" resultType="Int">
+        SELECT COUNT(*) 
+        FROM users 
+        WHERE create_time >= #{since}
+    </select>
+    
+    <select id="countDraws" resultType="Long">
+        SELECT COUNT(*) 
+        FROM draw_records 
+        WHERE create_time >= #{since}
+    </select>
+    
+    <select id="getOrderChange" resultType="Double">
+        SELECT ((today.count - yesterday.count) / yesterday.count * 100)
+        FROM 
+        (SELECT COUNT(*) as count FROM orders WHERE DATE(create_time) = CURDATE()) today,
+        (SELECT COUNT(*) as count FROM orders WHERE DATE(create_time) = DATE_SUB(CURDATE(), INTERVAL 1 DAY)) yesterday
+    </select>
+    
+    <select id="getSalesChange" resultType="Double">
+        SELECT ((today.amount - yesterday.amount) / yesterday.amount * 100)
+        FROM 
+        (SELECT COALESCE(SUM(total_amount), 0) as amount FROM orders WHERE DATE(create_time) = CURDATE() AND status = 'COMPLETED') today,
+        (SELECT COALESCE(SUM(total_amount), 0) as amount FROM orders WHERE DATE(create_time) = DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND status = 'COMPLETED') yesterday
+    </select>
+    
+    <select id="getUserChange" resultType="Double">
+        SELECT ((today.count - yesterday.count) / yesterday.count * 100)
+        FROM 
+        (SELECT COUNT(*) as count FROM users WHERE DATE(create_time) = CURDATE()) today,
+        (SELECT COUNT(*) as count FROM users WHERE DATE(create_time) = DATE_SUB(CURDATE(), INTERVAL 1 DAY)) yesterday
+    </select>
+    
+    <select id="getDrawChange" resultType="Double">
+        SELECT ((today.count - yesterday.count) / yesterday.count * 100)
+        FROM 
+        (SELECT COUNT(*) as count FROM draw_records WHERE DATE(create_time) = CURDATE()) today,
+        (SELECT COUNT(*) as count FROM draw_records WHERE DATE(create_time) = DATE_SUB(CURDATE(), INTERVAL 1 DAY)) yesterday
+    </select>
+    
+    <select id="getSalesTrend" resultType="com.mysterybox.dto.SalesTrend">
+        SELECT 
+            DATE(create_time) as date,
+            SUM(total_amount) as amount
+        FROM orders
+        WHERE create_time >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+        AND status = 'COMPLETED'
+        GROUP BY DATE(create_time)
+        ORDER BY date
+    </select>
+    
+    <select id="getDrawPreferences" resultType="com.mysterybox.dto.DrawPreference">
+        SELECT 
+            s.name as seriesName,
+            COUNT(*) as drawCount,
+            COUNT(*) * 100.0 / total.count as percentage
+        FROM draw_records dr
+        JOIN box_styles bs ON dr.style_id = bs.id
+        JOIN series s ON bs.series_id = s.id,
+        (SELECT COUNT(*) as count FROM draw_records) total
+        GROUP BY s.id, s.name
+        ORDER BY drawCount DESC
+        LIMIT 10
+    </select>
+    
+    <select id="getPopularStyles" resultType="com.mysterybox.dto.PopularStyle">
+        SELECT 
+            bs.name,
+            COUNT(*) as sales,
+            COUNT(*) * 100.0 / total.count as percentage
+        FROM draw_records dr
+        JOIN box_styles bs ON dr.style_id = bs.id,
+        (SELECT COUNT(*) as count FROM draw_records) total
+        GROUP BY bs.id, bs.name
+        ORDER BY sales DESC
+        LIMIT 10
+    </select>
+    
+</mapper> 

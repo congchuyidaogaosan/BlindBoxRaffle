@@ -1,21 +1,24 @@
-package com.mysterybox.service;
+package com.mysterybox.mapper;
 
 import com.mysterybox.dto.DrawPreference;
 import com.mysterybox.dto.PopularStyle;
 import com.mysterybox.dto.SalesTrend;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-public interface StatisticsService {
+@Mapper
+public interface StatisticsMapper {
     
-    Long countOrders(LocalDateTime since);
+    Long countOrders(@Param("since") LocalDateTime since);
     
-    Double countSales(LocalDateTime since);
+    Double countSales(@Param("since") LocalDateTime since);
     
-    int countNewUsers(LocalDateTime since);
+    int countNewUsers(@Param("since") LocalDateTime since);
     
-    Long countDraws(LocalDateTime since);
+    Long countDraws(@Param("since") LocalDateTime since);
     
     Double getOrderChange();
     

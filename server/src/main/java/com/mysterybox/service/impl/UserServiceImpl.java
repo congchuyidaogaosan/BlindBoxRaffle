@@ -1,9 +1,12 @@
 package com.mysterybox.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.mysterybox.entity.User;
-import com.mysterybox.repository.UserRepository;
+import com.mysterybox.mapper.UserMapper;
 import com.mysterybox.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,27 +17,26 @@ import java.util.List;
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
-    
+
     @Autowired
-    private UserRepository userRepository;
+    private UserMapper userMapper;
     
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Override
     public List<User> getAllUsers() {
-        return userRepository.findAll();
+        return userMapper.selectList(null);
     }
 
     @Override
     public User getUserById(Long id) {
-        return userRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("User not found"));
+        return userMapper.selectById(id);
     }
 
     @Override
     public User getUserByUsername(String username) {
-        return userRepository.findByUsername(username);
+        return findByUsername(username);
     }
 
     @Override
@@ -44,12 +46,16 @@ public class UserServiceImpl implements UserService {
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setBalance(BigDecimal.ZERO);
-        return userRepository.save(user);
+        userMapper.insert(user);
+        return user;
     }
 
     @Override
     public User updateUser(User user) {
         User existingUser = getUserById(user.getId());
+        if (existingUser == null) {
+            throw new RuntimeException("User not found");
+        }
         
         if (user.getPassword() != null && !user.getPassword().isEmpty()) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -57,23 +63,46 @@ public class UserServiceImpl implements UserService {
             user.setPassword(existingUser.getPassword());
         }
         
-        return userRepository.save(user);
+        userMapper.updateById(user);
+        return user;
     }
 
     @Override
     public void deleteUser(Long id) {
-        userRepository.deleteById(id);
+        userMapper.deleteById(id);
     }
 
     @Override
     public boolean existsByUsername(String username) {
-        return userRepository.findByUsername(username) != null;
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        wrapper.eq("username", username);
+        return userMapper.selectCount(wrapper) > 0;
     }
 
     @Override
     public void updateBalance(Long userId, BigDecimal newBalance) {
         User user = getUserById(userId);
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
         user.setBalance(newBalance);
-        userRepository.save(user);
+        userMapper.updateById(user);
+    }
+
+    @Override
+    public User findByUsername(String username) {
+        return userMapper.findByUsername(username);
+    }
+
+    @Override
+    public User getCurrentUser() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username;
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails)principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+        return findByUsername(username);
     }
 } 

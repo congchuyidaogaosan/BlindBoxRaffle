@@ -1,10 +1,9 @@
 import request from '@/utils/request'
 
-export function getStyleList(params) {
+export function getStylesBySeriesId(seriesId) {
   return request({
-    url: '/api/styles',
-    method: 'get',
-    params
+    url: `/api/styles/series/${seriesId}`,
+    method: 'get'
   })
 }
 

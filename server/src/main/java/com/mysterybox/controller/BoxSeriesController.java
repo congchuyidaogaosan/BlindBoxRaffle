@@ -1,49 +1,52 @@
 package com.mysterybox.controller;
 
+import com.mysterybox.common.Result;
 import com.mysterybox.entity.BoxSeries;
 import com.mysterybox.service.BoxSeriesService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/series")
+@RequestMapping("/api/box-series")
 public class BoxSeriesController {
     
     @Autowired
     private BoxSeriesService boxSeriesService;
     
     @GetMapping
-    public ResponseEntity<List<BoxSeries>> getAllSeries() {
-        return ResponseEntity.ok(boxSeriesService.getAllSeries());
+    public Result<List<BoxSeries>> getAllSeries() {
+        List<BoxSeries> seriesList = boxSeriesService.getAllSeries();
+        return Result.success(seriesList);
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<BoxSeries> getSeriesById(@PathVariable Long id) {
-        return ResponseEntity.ok(boxSeriesService.getSeriesById(id));
+    public Result<BoxSeries> getSeriesById(@PathVariable Long id) {
+        BoxSeries series = boxSeriesService.getSeriesById(id);
+        if (series == null) {
+            return Result.error(404, "系列不存在");
+        }
+        return Result.success(series);
     }
     
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<BoxSeries> createSeries(@Valid @RequestBody BoxSeries series) {
-        return ResponseEntity.ok(boxSeriesService.createSeries(series));
+    public Result<BoxSeries> createSeries(@Valid @RequestBody BoxSeries series) {
+        BoxSeries savedSeries = boxSeriesService.createSeries(series);
+        return Result.success("创建系列成功", savedSeries);
     }
     
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<BoxSeries> updateSeries(@PathVariable Long id, @Valid @RequestBody BoxSeries series) {
+    public Result<BoxSeries> updateSeries(@PathVariable Long id, @Valid @RequestBody BoxSeries series) {
         series.setId(id);
-        return ResponseEntity.ok(boxSeriesService.updateSeries(series));
+        BoxSeries updatedSeries = boxSeriesService.updateSeries(series);
+        return Result.success("更新系列成功", updatedSeries);
     }
     
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> deleteSeries(@PathVariable Long id) {
+    public Result<Void> deleteSeries(@PathVariable Long id) {
         boxSeriesService.deleteSeries(id);
-        return ResponseEntity.ok().build();
+        return Result.success("删除系列成功", null);
     }
 } 

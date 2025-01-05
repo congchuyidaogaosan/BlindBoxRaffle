@@ -1,11 +1,10 @@
 package com.mysterybox.controller;
 
+import com.mysterybox.common.Result;
 import com.mysterybox.dto.DrawResult;
 import com.mysterybox.entity.BoxStyle;
 import com.mysterybox.service.DrawService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -20,25 +19,25 @@ public class DrawController {
     private DrawService drawService;
 
     @PostMapping("/{seriesId}")
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<DrawResult> draw(
+    public Result<DrawResult> draw(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable Long seriesId) {
-        return ResponseEntity.ok(drawService.draw(Long.valueOf(userDetails.getUsername()), seriesId));
+        DrawResult result = drawService.draw(Long.valueOf(userDetails.getUsername()), seriesId);
+        return Result.success("抽奖成功", result);
     }
 
     @PostMapping("/{seriesId}/multiple/{count}")
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<List<DrawResult>> drawMultiple(
+    public Result<List<DrawResult>> drawMultiple(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable Long seriesId,
             @PathVariable int count) {
-        return ResponseEntity.ok(drawService.drawMultiple(Long.valueOf(userDetails.getUsername()), seriesId, count));
+        List<DrawResult> results = drawService.drawMultiple(Long.valueOf(userDetails.getUsername()), seriesId, count);
+        return Result.success("抽奖成功", results);
     }
 
     @GetMapping("/history/{userId}")
-    public ResponseEntity<List<BoxStyle>> getDrawHistory(@PathVariable Long userId) {
-//        return ResponseEntity.ok(drawService(userId));
-        return null;
+    public Result<List<BoxStyle>> getDrawHistory(@PathVariable Long userId) {
+//        return Result.success(drawService.getDrawHistory(userId));
+        return Result.success(null);
     }
 } 

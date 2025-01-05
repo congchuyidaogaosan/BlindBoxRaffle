@@ -1,9 +1,10 @@
 package com.mysterybox.controller;
 
+import com.mysterybox.common.Result;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
@@ -19,9 +20,9 @@ public class FileController {
     private String accessPath;
     
     @PostMapping
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
+    public Result<String> uploadFile(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
-            return ResponseEntity.badRequest().body("文件不能为空");
+            return Result.error(400, "文件不能为空");
         }
         
         String fileName = UUID.randomUUID().toString() + getFileExtension(file.getOriginalFilename());
@@ -29,9 +30,9 @@ public class FileController {
         
         try {
             file.transferTo(dest);
-            return ResponseEntity.ok(accessPath + fileName);
+            return Result.success("上传成功", accessPath + fileName);
         } catch (IOException e) {
-            return ResponseEntity.internalServerError().body("上传失败");
+            return Result.error(500, "上传失败");
         }
     }
     

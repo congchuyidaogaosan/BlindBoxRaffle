@@ -2,12 +2,15 @@ package com.mysterybox.controller;
 
 import com.mysterybox.entity.User;
 import com.mysterybox.service.UserService;
-
+import com.mysterybox.utils.JwtUtils;
+import com.mysterybox.common.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -17,45 +20,67 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-//    @Autowired
-//    private AuthenticationManager authenticationManager;
 
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtUtils jwtUtils;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody User loginRequest) {
-//        Authentication authentication = authenticationManager.authenticate(
-//                new UsernamePasswordAuthenticationToken(
-//                        loginRequest.getUsername(),
-//                        loginRequest.getPassword()
-//                )
-//        );
+    public Result<?> login(@Valid @RequestBody User loginRequest) {
+        try {
+            // 验证用户名和密码
+            User user = userService.findByUsername(loginRequest.getUsername());
+            if (user == null) {
+                return Result.error(400, "用户不存在");
+            }
 
-//        String jwt = jwtUtil.generateToken(authentication);
+            // 使用相同的 encoder 实例进行测试
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("token", null);
-        response.put("type", "Bearer");
+            if (!encoder.matches(loginRequest.getPassword(), user.getPassword())) {
+                return Result.error(400, "密码错误");
+            }
 
-        return ResponseEntity.ok(response);
+            // 生成JWT token
+            String token = jwtUtils.generateToken(user.getUsername());
+
+            // 构建响应
+            Map<String, Object> response = new HashMap<>();
+            response.put("token", token);
+            response.put("type", "Bearer");
+            
+            // 移除敏感信息
+            user.setPassword(null);
+            response.put("userInfo", user);
+
+            return Result.success("登录成功", response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.error("登录失败：" + e.getMessage());
+        }
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody User registerRequest) {
+    public Result<?> register(@Valid @RequestBody User registerRequest) {
         if (userService.existsByUsername(registerRequest.getUsername())) {
-            return ResponseEntity.badRequest().body("Username is already taken");
+            return Result.error(400, "用户名已存在");
         }
 
-        User user = new User();
-        user.setUsername(registerRequest.getUsername());
-        user.setPassword(registerRequest.getPassword());
-        user.setNickname(registerRequest.getNickname());
-        user.setPhone(registerRequest.getPhone());
-
-        userService.createUser(user);
-
-        return ResponseEntity.ok("User registered successfully");
+        try {
+            // 加密密码
+            registerRequest.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+            
+            User user = userService.createUser(registerRequest);
+            user.setPassword(null); // 移除密码后返回
+            
+            return Result.success("注册成功", user);
+        } catch (Exception e) {
+            return Result.error("注册失败：" + e.getMessage());
+        }
     }
 } 

@@ -1,51 +1,42 @@
 import router from './router'
 import store from './store'
 import { Message } from 'element-ui'
-import NProgress from 'nprogress'
-import 'nprogress/nprogress.css'
-import { getToken } from '@/utils/auth'
 
-NProgress.configure({ showSpinner: false })
+// 白名单路由
+const whiteList = ['/login', '/register']
 
-const whiteList = ['/login', '/auth-redirect']
-
-router.beforeEach(async(to, from, next) => {
-  NProgress.start()
-
-  const hasToken = getToken()
+router.beforeEach(async (to, from, next) => {
+  const hasToken = store.getters['user/getToken']
 
   if (hasToken) {
     if (to.path === '/login') {
       next({ path: '/' })
-      NProgress.done()
     } else {
-      const hasRoles = store.getters.roles && store.getters.roles.length > 0
-      if (hasRoles) {
+      const hasUserInfo = store.getters['user/getUserInfo']
+      if (hasUserInfo) {
         next()
       } else {
         try {
-          const { roles } = await store.dispatch('user/getInfo')
-          const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
-          router.addRoutes(accessRoutes)
-          next({ ...to, replace: true })
+          // 获取用户信息
+          await store.dispatch('user/getUserInfo')
+          next()
         } catch (error) {
-          await store.dispatch('user/resetToken')
-          Message.error(error || 'Has Error')
+          // 清除token并跳转登录页
+          store.dispatch('user/logout')
+          Message.error(error.message || '获取用户信息失败')
           next(`/login?redirect=${to.path}`)
-          NProgress.done()
         }
       }
     }
   } else {
-    if (whiteList.indexOf(to.path) !== -1) {
+    if (whiteList.includes(to.path)) {
       next()
     } else {
       next(`/login?redirect=${to.path}`)
-      NProgress.done()
     }
   }
 })
 
 router.afterEach(() => {
-  NProgress.done()
+  // 结束进度条等
 }) 
