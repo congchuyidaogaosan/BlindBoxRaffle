@@ -16,13 +16,13 @@ public class BoxSeriesController {
     @Autowired
     private BoxSeriesService boxSeriesService;
     
-    @GetMapping
+    @GetMapping("/list")
     public Result<List<BoxSeries>> getAllSeries() {
         List<BoxSeries> seriesList = boxSeriesService.getAllSeries();
         return Result.success(seriesList);
     }
     
-    @GetMapping("/{id}")
+    @PostMapping("/detail/{id}")
     public Result<BoxSeries> getSeriesById(@PathVariable Long id) {
         BoxSeries series = boxSeriesService.getSeriesById(id);
         if (series == null) {
@@ -31,20 +31,20 @@ public class BoxSeriesController {
         return Result.success(series);
     }
     
-    @PostMapping
+    @PostMapping("/create")
     public Result<BoxSeries> createSeries(@Valid @RequestBody BoxSeries series) {
         BoxSeries savedSeries = boxSeriesService.createSeries(series);
         return Result.success("创建系列成功", savedSeries);
     }
     
-    @PutMapping("/{id}")
+    @PostMapping("/update/{id}")
     public Result<BoxSeries> updateSeries(@PathVariable Long id, @Valid @RequestBody BoxSeries series) {
         series.setId(id);
         BoxSeries updatedSeries = boxSeriesService.updateSeries(series);
         return Result.success("更新系列成功", updatedSeries);
     }
     
-    @DeleteMapping("/{id}")
+    @PostMapping("/delete/{id}")
     public Result<Void> deleteSeries(@PathVariable Long id) {
         boxSeriesService.deleteSeries(id);
         return Result.success("删除系列成功", null);

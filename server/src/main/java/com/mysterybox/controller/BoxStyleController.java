@@ -62,4 +62,10 @@ public class BoxStyleController {
 //        String imageUrl = boxStyleService.uploadImage(id, file);
         return Result.success("上传图片成功", "");
     }
+
+    @GetMapping("/hot")
+    public Result<List<BoxStyle>> getHotStyles(@RequestParam(defaultValue = "3") int limit) {
+        List<BoxStyle> hotStyles = boxStyleService.getHotStyles(limit);
+        return Result.success(hotStyles);
+    }
 } 

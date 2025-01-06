@@ -47,6 +47,7 @@ public class StatisticsController {
         return Result.success(statisticsService.getDrawPreferences());
     }
 
+    //获取系列销量数据
     @GetMapping("/popular")
     public Result<List<PopularStyle>> getPopularStyles() {
         return Result.success(statisticsService.getPopularStyles());

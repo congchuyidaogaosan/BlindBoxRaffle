@@ -80,7 +80,7 @@
 
 <script>
 import { getOverview, getDrawPreferences, getPopularStyles } from '@/api/statistics'
-import VChart from 'vue-echarts'
+import ECharts from 'vue-echarts'
 import 'echarts/lib/chart/line'
 import 'echarts/lib/chart/pie'
 import 'echarts/lib/component/tooltip'
@@ -90,7 +90,7 @@ import 'echarts/lib/component/legend'
 export default {
   name: 'DashboardView',
   components: {
-    VChart
+    'v-chart': ECharts
   },
   data() {
     return {

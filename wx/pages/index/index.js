@@ -1,42 +1,40 @@
 // index.js
-import { getBanners, getSeriesList } from '../../utils/api'
+import { getHotStyles, getSeriesList } from '../../utils/api'
 
 Page({
   data: {
-    banners: [],
-    seriesList: [],
+    hotStyles: [], // 热门款式
+    seriesList: [], // 系列列表
     loading: false
   },
-  
-  async getBanners() {
-    try {
-      const res = await getBanners()
-      if (res.statusCode === 200) {
-        this.setData({
-          banners: res.data
-        })
-      }
-    } catch (error) {
-      console.error('获取轮播图失败', error)
-    }
+
+  onLoad() {
+    this.fetchData()
   },
-  
-  async getSeriesList() {
+
+  async fetchData() {
     this.setData({ loading: true })
     try {
-      const res = await getSeriesList()
-      if (res.statusCode === 200) {
-        this.setData({
-          seriesList: res.data
-        })
-      }
+      // 并行请求热门款式和系列列表
+      const [hotRes, seriesRes] = await Promise.all([
+        getHotStyles(),
+        getSeriesList()
+      ])
+
+      this.setData({
+        hotStyles: hotRes.data.data,
+        seriesList: seriesRes.data.data
+      })
     } catch (error) {
-      console.error('获取系列列表失败', error)
+      wx.showToast({
+        title: '获取数据失败',
+        icon: 'none'
+      })
     } finally {
       this.setData({ loading: false })
     }
   },
-  
+
   goToDetail(e) {
     const { id } = e.currentTarget.dataset
     wx.navigateTo({

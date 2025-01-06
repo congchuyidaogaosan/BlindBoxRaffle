@@ -14,13 +14,6 @@ export function getOrderDetails(orderId) {
   })
 }
 
-export function createOrder(data) {
-  return request({
-    url: '/api/orders',
-    method: 'post',
-    data
-  })
-}
 
 export function updateOrder(id, data) {
   return request({

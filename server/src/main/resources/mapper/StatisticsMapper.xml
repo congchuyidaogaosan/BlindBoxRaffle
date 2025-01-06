@@ -17,13 +17,13 @@
     
     <select id="countNewUsers" resultType="Int">
         SELECT COUNT(*) 
-        FROM users 
+        FROM user
         WHERE create_time >= #{since}
     </select>
     
     <select id="countDraws" resultType="Long">
         SELECT COUNT(*) 
-        FROM draw_records 
+        FROM order_detail
         WHERE create_time >= #{since}
     </select>
     
@@ -44,15 +44,15 @@
     <select id="getUserChange" resultType="Double">
         SELECT ((today.count - yesterday.count) / yesterday.count * 100)
         FROM 
-        (SELECT COUNT(*) as count FROM users WHERE DATE(create_time) = CURDATE()) today,
-        (SELECT COUNT(*) as count FROM users WHERE DATE(create_time) = DATE_SUB(CURDATE(), INTERVAL 1 DAY)) yesterday
+        (SELECT COUNT(*) as count FROM user WHERE DATE(create_time) = CURDATE()) today,
+        (SELECT COUNT(*) as count FROM user WHERE DATE(create_time) = DATE_SUB(CURDATE(), INTERVAL 1 DAY)) yesterday
     </select>
     
     <select id="getDrawChange" resultType="Double">
         SELECT ((today.count - yesterday.count) / yesterday.count * 100)
         FROM 
-        (SELECT COUNT(*) as count FROM draw_records WHERE DATE(create_time) = CURDATE()) today,
-        (SELECT COUNT(*) as count FROM draw_records WHERE DATE(create_time) = DATE_SUB(CURDATE(), INTERVAL 1 DAY)) yesterday
+        (SELECT COUNT(*) as count FROM order_detail WHERE DATE(create_time) = CURDATE()) today,
+        (SELECT COUNT(*) as count FROM order_detail WHERE DATE(create_time) = DATE_SUB(CURDATE(), INTERVAL 1 DAY)) yesterday
     </select>
     
     <select id="getSalesTrend" resultType="com.mysterybox.dto.SalesTrend">
@@ -70,24 +70,26 @@
         SELECT 
             s.name as seriesName,
             COUNT(*) as drawCount,
-            COUNT(*) * 100.0 / total.count as percentage
-        FROM draw_records dr
-        JOIN box_styles bs ON dr.style_id = bs.id
-        JOIN series s ON bs.series_id = s.id,
-        (SELECT COUNT(*) as count FROM draw_records) total
+            COUNT(*) * 100.0 / (SELECT COUNT(*) FROM order_detail) as percentage
+        FROM order_detail od
+        JOIN box_style bs ON od.box_style_id = bs.id
+        JOIN box_series s ON bs.series_id = s.id
         GROUP BY s.id, s.name
         ORDER BY drawCount DESC
         LIMIT 10
     </select>
-    
+
+<!--    获取系列销量数据-->
     <select id="getPopularStyles" resultType="com.mysterybox.dto.PopularStyle">
         SELECT 
             bs.name,
-            COUNT(*) as sales,
-            COUNT(*) * 100.0 / total.count as percentage
-        FROM draw_records dr
-        JOIN box_styles bs ON dr.style_id = bs.id,
-        (SELECT COUNT(*) as count FROM draw_records) total
+            SUM(od.quantity) as sales,
+            SUM(od.price * od.quantity) as amount
+        FROM 
+            order_detail od
+        JOIN box_style bs ON od.box_style_id = bs.id
+        JOIN orders o ON od.order_id = o.id
+        WHERE o.status = 'COMPLETED'
         GROUP BY bs.id, bs.name
         ORDER BY sales DESC
         LIMIT 10

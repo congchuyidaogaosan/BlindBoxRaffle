@@ -8,3 +8,49 @@ page {
   flex: 1;
   overflow-y: hidden;
 }
+
+.swiper-container {
+  width: 100%;
+  height: 400rpx;
+  position: relative;
+}
+
+.hot-swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.swiper-item {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.slide-image {
+  width: 100%;
+  height: 100%;
+}
+
+.slide-info {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  padding: 20rpx;
+  background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+  color: #fff;
+}
+
+.slide-name {
+  font-size: 32rpx;
+  margin-bottom: 10rpx;
+}
+
+.slide-price {
+  font-size: 28rpx;
+  color: #f6c142;
+}
+
+.content {
+  padding: 20rpx;
+}

@@ -14,4 +14,5 @@ public interface BoxStyleService {
     void deleteStyle(Long id);
     List<DrawPreference> getDrawPreferences();
     List<PopularStyle> getPopularStyles();
+    List<BoxStyle> getHotStyles(int limit);
 } 

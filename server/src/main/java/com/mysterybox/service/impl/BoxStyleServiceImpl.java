@@ -11,6 +11,7 @@ import com.mysterybox.service.BoxStyleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -67,5 +68,10 @@ public class BoxStyleServiceImpl implements BoxStyleService {
     @Override
     public List<PopularStyle> getPopularStyles() {
         return null;
+    }
+
+    @Override
+    public List<BoxStyle> getHotStyles(int limit) {
+        return Collections.emptyList();
     }
 }

@@ -5,7 +5,7 @@ import { Message } from 'element-ui'
 
 // 创建axios实例
 const service = axios.create({
-  baseURL: '',
+  // baseURL: '',
   timeout: 5000
 })
 
