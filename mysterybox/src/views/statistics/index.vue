@@ -85,17 +85,48 @@
 
 <script>
 import { getOverview, getDrawPreferences, getPopularStyles } from '@/api/statistics'
-import ECharts from 'vue-echarts'
-import 'echarts/lib/chart/line'
-import 'echarts/lib/chart/pie'
-import 'echarts/lib/component/tooltip'
-import 'echarts/lib/component/title'
-import 'echarts/lib/component/legend'
+import * as echarts from 'echarts'
+import { use } from 'echarts/core'
+import { CanvasRenderer } from 'echarts/renderers'
+import { LineChart, PieChart } from 'echarts/charts'
+import {
+  TitleComponent,
+  TooltipComponent,
+  LegendComponent,
+  GridComponent
+} from 'echarts/components'
+
+use([
+  CanvasRenderer,
+  LineChart,
+  PieChart,
+  TitleComponent,
+  TooltipComponent,
+  LegendComponent,
+  GridComponent
+])
 
 export default {
   name: 'StatisticsView',
   components: {
-    'v-chart': ECharts
+    'v-chart': {
+      props: ['option'],
+      mounted() {
+        this.chart = echarts.init(this.$el)
+        this.chart.setOption(this.option)
+      },
+      watch: {
+        option: {
+          handler(newVal) {
+            this.chart.setOption(newVal)
+          },
+          deep: true
+        }
+      },
+      beforeDestroy() {
+        this.chart.dispose()
+      }
+    }
   },
   data() {
     return {

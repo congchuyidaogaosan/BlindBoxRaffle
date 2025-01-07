@@ -1,9 +1,9 @@
-const baseUrl = 'http://localhost:8080/api'
+import request from './request'
 
 // 获取热门款式
 export function getHotStyles(limit = 3) {
-  return wx.request({
-    url: `${baseUrl}/styles/hot`,
+  return request({
+    url: '/styles/hot',
     method: 'GET',
     data: { limit }
   })
@@ -11,8 +11,8 @@ export function getHotStyles(limit = 3) {
 
 // 获取系列列表
 export function getSeriesList() {
-  return wx.request({
-    url: `${baseUrl}/series`,
+  return request({
+    url: '/series/list',
     method: 'GET'
   })
 } 

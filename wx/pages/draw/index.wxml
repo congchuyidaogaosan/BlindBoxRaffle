@@ -21,16 +21,22 @@
     </swiper>
   </view>
 
-  <view class="style-info" wx:if="{{styleInfo}}">
-    <image src="{{styleInfo.imageUrl}}" mode="aspectFill" class="style-image" />
-    <view class="info">
-      <text class="name">{{styleInfo.name}}</text>
-      <text class="price">￥{{styleInfo.price}}</text>
-      <text class="probability">{{styleInfo.probability}}%</text>
+  <!-- 系列列表 -->
+  <view class="series-list">
+    <view class="series-item" 
+          wx:for="{{seriesList}}" 
+          wx:key="id"
+          data-id="{{item.id}}"
+          bindtap="goToDetail">
+      <image src="{{item.imageUrl}}" mode="aspectFill" />
+      <view class="info">
+        <text class="name">{{item.name}}</text>
+        <text class="desc">{{item.description}}</text>
+      </view>
     </view>
-    <button class="draw-btn" bindtap="handlePay">立即抽取</button>
   </view>
-  
+
+  <!-- 加载中提示 -->
   <view class="loading" wx:if="{{loading}}">
     <text>加载中...</text>
   </view>

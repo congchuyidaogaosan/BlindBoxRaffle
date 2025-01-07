@@ -3,11 +3,17 @@ server:
 spring:
   mvc:
     static-path-pattern: /**
+    pathmatch:
+      matching-strategy: ant_path_matcher
     servlet:
       load-on-startup: 1
       path: /
   resources:
-    static-locations: classpath:/templates/
+    static-locations:
+      - classpath:/static/
+      - classpath:/public/
+      - classpath:/resources/
+      - file:${file.upload.path}
   datasource:
     username: root
     password: 20020309
@@ -32,9 +38,9 @@ mybatis-plus:
 
 file:
   upload:
-    path: /path/to/upload/directory/
+    path: ${user.dir}/uploads/
   access:
-    path: http://your-domain/uploads/
+    path: http://localhost:${server.port}/uploads/
 
 wx:
   miniapp:

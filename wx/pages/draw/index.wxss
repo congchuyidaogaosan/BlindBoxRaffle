@@ -1,41 +1,88 @@
-.style-info {
-  padding: 30rpx;
-  background: #fff;
-  border-radius: 12rpx;
-  margin: 20rpx;
+.container {
+  padding: 20rpx;
 }
 
-.style-image {
+.swiper-container {
   width: 100%;
   height: 400rpx;
-  border-radius: 8rpx;
+  position: relative;
+  margin-bottom: 30rpx;
 }
 
-.info {
-  margin-top: 20rpx;
+.hot-swiper {
+  width: 100%;
+  height: 100%;
 }
 
-.name {
+.swiper-item {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.slide-image {
+  width: 100%;
+  height: 100%;
+}
+
+.slide-info {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  padding: 20rpx;
+  background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+  color: #fff;
+}
+
+.slide-name {
   font-size: 32rpx;
+  margin-bottom: 10rpx;
+}
+
+.slide-price {
+  font-size: 28rpx;
+  color: #f6c142;
+}
+
+.series-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.series-item {
+  background: #fff;
+  border-radius: 12rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.1);
+}
+
+.series-item image {
+  width: 100%;
+  height: 300rpx;
+}
+
+.series-item .info {
+  padding: 20rpx;
+}
+
+.series-item .name {
+  font-size: 32rpx;
+  font-weight: bold;
   color: #333;
   display: block;
   margin-bottom: 10rpx;
 }
 
-.price {
-  font-size: 36rpx;
-  color: #f56c6c;
-  font-weight: bold;
-  margin-right: 20rpx;
-}
-
-.probability {
+.series-item .desc {
   font-size: 28rpx;
-  color: #909399;
+  color: #666;
+  display: block;
 }
 
-.draw-btn {
-  margin-top: 30rpx;
-  background: #409EFF;
-  color: #fff;
+.loading {
+  text-align: center;
+  padding: 30rpx;
+  color: #999;
 } 

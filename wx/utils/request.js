@@ -1,25 +1,33 @@
-const request = (options) => {
-  const token = wx.getStorageSync('token')
-  
+const baseUrl = 'http://localhost:8080/api'
+
+function request(options) {
   return new Promise((resolve, reject) => {
     wx.request({
-      ...options,
+      url: `${baseUrl}${options.url}`,
+      method: options.method || 'GET',
+      data: options.data,
       header: {
-        ...options.header,
-        Authorization: token ? `Bearer ${token}` : ''
+        'Content-Type': 'application/json',
+        ...options.header
       },
       success: (res) => {
-        if (res.statusCode === 401) {
-          // token过期，重新登录
-          wx.navigateTo({
-            url: '/pages/login/index'
-          })
-          reject(new Error('未登录或登录已过期'))
+        if (res.statusCode === 200) {
+          resolve(res.data)
         } else {
-          resolve(res)
+          wx.showToast({
+            title: res.data.message || '请求失败',
+            icon: 'none'
+          })
+          reject(res.data)
         }
       },
-      fail: reject
+      fail: (err) => {
+        wx.showToast({
+          title: '网络错误',
+          icon: 'none'
+        })
+        reject(err)
+      }
     })
   })
 }

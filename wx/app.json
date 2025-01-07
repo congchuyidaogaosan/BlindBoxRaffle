@@ -1,7 +1,7 @@
 {
   "pages": [
-    "pages/series/index",
     "pages/draw/index",
+    "pages/series/index",
     "pages/draw/result",
     "pages/user/index",
     "pages/user/orders",
@@ -23,15 +23,21 @@
     "list": [
       {
         "pagePath": "pages/draw/index",
-        "text": "首页"
+        "text": "首页",
+        "iconPath": "images/home.png",
+        "selectedIconPath": "images/home-active.png"
       },
       {
         "pagePath": "pages/series/index",
-        "text": "系列"
+        "text": "系列",
+        "iconPath": "images/series.png",
+        "selectedIconPath": "images/series-active.png"
       },
       {
         "pagePath": "pages/user/index",
-        "text": "我的"
+        "text": "我的",
+        "iconPath": "images/user.png",
+        "selectedIconPath": "images/user-active.png"
       }
     ]
   },

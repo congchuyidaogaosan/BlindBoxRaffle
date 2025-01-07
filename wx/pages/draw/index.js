@@ -1,66 +1,44 @@
-import { getStyleById, pay } from '../../utils/api'
+import { getHotStyles, getSeriesList } from '../../utils/api'
 
 Page({
   data: {
-    styleId: null,
-    styleInfo: null,
+    hotStyles: [], // 热门款式
+    seriesList: [], // 系列列表
     loading: false
   },
-  
-  onLoad(options) {
-    this.setData({
-      styleId: options.styleId
-    })
+
+  onLoad() {
     this.fetchData()
   },
-  
+
   async fetchData() {
     this.setData({ loading: true })
     try {
-      const res = await getStyleById(this.data.styleId)
-      if (res.statusCode === 200) {
-        this.setData({
-          styleInfo: res.data
-        })
-      }
+      // 并行请求热门款式和系列列表
+      const [hotRes, seriesRes] = await Promise.all([
+        getHotStyles(),
+        getSeriesList()
+      ])
+
+      this.setData({
+        hotStyles: hotRes.data,
+        seriesList: seriesRes.data
+      })
     } catch (error) {
-      console.error('获取款式信息失败', error)
+      wx.showToast({
+        title: '获取数据失败',
+        icon: 'none'
+      })
     } finally {
       this.setData({ loading: false })
     }
   },
-  
-  async handlePay() {
-    try {
-      // 创建订单
-      const orderRes = await wx.request({
-        url: `${baseURL}/orders`,
-        method: 'POST',
-        data: {
-          userId: wx.getStorageSync('userId'),
-          styleId: this.data.styleId,
-          quantity: 1,
-          amount: this.data.styleInfo.price
-        }
-      })
-      
-      if (orderRes.statusCode === 200) {
-        // 支付
-        await pay(orderRes.data.id, this.data.styleInfo.price)
-        wx.showToast({
-          title: '支付成功',
-          icon: 'success'
-        })
-        // 跳转到抽取结果页
-        wx.navigateTo({
-          url: `/pages/draw/result?orderId=${orderRes.data.id}`
-        })
-      }
-    } catch (error) {
-      wx.showToast({
-        title: error.message || '支付失败',
-        icon: 'none'
-      })
-    }
+
+  // 点击系列跳转到详情页
+  goToDetail(e) {
+    const { id } = e.currentTarget.dataset
+    wx.navigateTo({
+      url: `/pages/series/detail?id=${id}`
+    })
   }
 }) 
