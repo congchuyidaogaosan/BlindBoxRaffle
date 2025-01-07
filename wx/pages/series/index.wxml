@@ -1,2 +1,50 @@
 <!--pages/series/index.wxml-->
-<text>pages/series/index.wxml</text>
+<view class="container">
+  <!-- 搜索框 -->
+  <view class="search-box">
+    <view class="search-bar">
+      <icon type="search" size="16" color="#999"/>
+      <input 
+        class="search-input" 
+        placeholder="搜索系列" 
+        value="{{keyword}}"
+        bindconfirm="onSearch"
+        confirm-type="search"
+        placeholder-style="color: #999"
+      />
+      <view class="search-btn" bindtap="onSearch">搜索</view>
+    </view>
+  </view>
+
+  <!-- 系列列表 -->
+  <scroll-view 
+    class="series-list" 
+    scroll-y
+    refresher-enabled="{{true}}"
+    refresher-triggered="{{refreshing}}"
+    bindrefresherrefresh="onRefresh"
+  >
+    <view class="series-grid">
+      <view class="series-item" 
+        wx:for="{{seriesList}}" 
+        wx:key="id"
+        data-id="{{item.id}}"
+        bindtap="goToDetail"
+      >
+        <image src="{{item.imageUrl}}" mode="aspectFill" />
+        <view class="info">
+          <text class="name">{{item.name}}</text>
+          <text class="price">¥ {{item.price}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 加载状态 -->
+    <view class="loading" wx:if="{{loading}}">
+      <text>加载中...</text>
+    </view>
+    <view class="no-data" wx:if="{{!loading && seriesList.length === 0}}">
+      <text>暂无数据</text>
+    </view>
+  </scroll-view>
+</view>

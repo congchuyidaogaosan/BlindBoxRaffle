@@ -1,10 +1,11 @@
 import request from '@/utils/request'
 
 // 获取系列列表
-export function getSeriesList() {
+export function getSeriesList(params) {
   return request({
     url: '/api/series/list',
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 
@@ -21,7 +22,7 @@ export function createSeries(data) {
 export function updateSeries(id, data) {
   return request({
     url: `/api/series/update/${id}`,
-    method: 'put',
+    method: 'post',
     data
   })
 }
@@ -30,7 +31,7 @@ export function updateSeries(id, data) {
 export function deleteSeries(id) {
   return request({
     url: `/api/series/delete/${id}`,
-    method: 'delete'
+    method: 'post'
   })
 }
 

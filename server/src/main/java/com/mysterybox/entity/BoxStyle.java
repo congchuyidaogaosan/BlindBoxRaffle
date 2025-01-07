@@ -1,24 +1,30 @@
 package com.mysterybox.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
-import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Date;
 
 @Data
-@Entity
-@Table(name = "box_style")
-public class BoxStyle extends BaseEntity {
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "series_id")
+@TableName("box_style")
+public class BoxStyle {
+    @TableId(type = IdType.AUTO)
+    private Long id;
+
+    @TableField("series_id")
+    private Long seriesId;
+
     @TableField(exist = false)
     private BoxSeries series;
     
     private String name;
     private String description;
-    private BigDecimal price;
     private Integer stock;
     private BigDecimal probability;
     private String imageUrl;
-    private Integer status;
+    private Date createTime;
+    private Date updateTime;
 } 

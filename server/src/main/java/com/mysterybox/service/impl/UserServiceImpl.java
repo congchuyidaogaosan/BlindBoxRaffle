@@ -1,18 +1,23 @@
 package com.mysterybox.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.mysterybox.dto.LoginRequest;
+import com.mysterybox.dto.LoginResponse;
 import com.mysterybox.entity.User;
 import com.mysterybox.mapper.UserMapper;
 import com.mysterybox.service.UserService;
+import com.mysterybox.utils.JwtUtil;
+import com.mysterybox.utils.WxUtil;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
+import java.math.BigDecimal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Service
 @Transactional
@@ -20,9 +25,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMapper userMapper;
-    
+
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private WxUtil wxUtil;
 
     @Override
     public List<User> getAllUsers() {
@@ -45,7 +53,6 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("Username already exists");
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setBalance(BigDecimal.ZERO);
         userMapper.insert(user);
         return user;
     }
@@ -74,9 +81,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean existsByUsername(String username) {
-        QueryWrapper<User> wrapper = new QueryWrapper<>();
-        wrapper.eq("username", username);
-        return userMapper.selectCount(wrapper) > 0;
+        return userMapper.findByUsername(username) != null;
     }
 
     @Override
@@ -104,5 +109,46 @@ public class UserServiceImpl implements UserService {
             username = principal.toString();
         }
         return findByUsername(username);
+    }
+
+    @Override
+    @Transactional
+    public LoginResponse login(LoginRequest request) {
+        // 获取openId
+        String openId = wxUtil.getOpenId(request.getCode());
+        
+        // 查找或创建用户
+        User user = userMapper.findByOpenId(openId);
+        if (user == null) {
+            user = new User();
+            user.setOpenId(openId);
+            user.setStatus(1);
+            user.setCreateTime(new Date());
+        }
+        
+        // 更新用户信息
+        LoginRequest.WxUserInfo wxUserInfo = request.getUserInfo();
+        BeanUtils.copyProperties(wxUserInfo, user);
+        user.setLastLoginTime(new Date());
+        user.setUpdateTime(new Date());
+        
+        if (user.getId() == null) {
+            userMapper.insert(user);
+        } else {
+            userMapper.updateById(user);
+        }
+
+        // 生成token
+        String token = JwtUtil.generateToken(user.getId());
+
+        // 构建返回数据
+        LoginResponse response = new LoginResponse();
+        response.setToken(token);
+        
+        LoginResponse.UserInfo userInfo = new LoginResponse.UserInfo();
+        BeanUtils.copyProperties(user, userInfo);
+        response.setUserInfo(userInfo);
+
+        return response;
     }
 } 

@@ -30,4 +30,30 @@
     <delete id="delete">
         DELETE FROM box_series WHERE id = #{id}
     </delete>
+    
+    <select id="findByNameAndStatus" resultType="com.mysterybox.entity.BoxSeries">
+        SELECT * FROM box_series 
+        WHERE 1=1
+        <if test="name != null and name != ''">
+            AND name LIKE CONCAT('%', #{name}, '%')
+        </if>
+        <if test="status != null">
+            AND status = #{status}
+        </if>
+        ORDER BY create_time DESC
+    </select>
+    
+    <select id="findHotSeries" resultType="com.mysterybox.entity.BoxSeries">
+        SELECT bs.*, 
+               COUNT(od.id) as sales_count,
+               SUM(od.price * od.quantity) as total_sales
+        FROM box_series bs
+        LEFT JOIN box_style s ON bs.id = s.series_id
+        LEFT JOIN order_detail od ON s.id = od.box_style_id
+        LEFT JOIN orders o ON od.order_id = o.id AND o.status = 'COMPLETED'
+        GROUP BY bs.id
+        HAVING total_sales > 0
+        ORDER BY total_sales DESC
+        LIMIT #{limit}
+    </select>
 </mapper> 

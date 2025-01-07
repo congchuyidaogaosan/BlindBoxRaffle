@@ -17,12 +17,15 @@ public class BoxSeriesController {
     private BoxSeriesService boxSeriesService;
     
     @GetMapping("/list")
-    public Result<List<BoxSeries>> getAllSeries() {
-        List<BoxSeries> seriesList = boxSeriesService.getAllSeries();
+    public Result<List<BoxSeries>> getAllSeries(
+        @RequestParam(required = false) String name,
+        @RequestParam(required = false) Integer status
+    ) {
+        List<BoxSeries> seriesList = boxSeriesService.getAllSeries(name, status);
         return Result.success(seriesList);
     }
     
-    @PostMapping("/detail/{id}")
+    @GetMapping("/detail/{id}")
     public Result<BoxSeries> getSeriesById(@PathVariable Long id) {
         BoxSeries series = boxSeriesService.getSeriesById(id);
         if (series == null) {
@@ -48,5 +51,13 @@ public class BoxSeriesController {
     public Result<Void> deleteSeries(@PathVariable Long id) {
         boxSeriesService.deleteSeries(id);
         return Result.success("删除系列成功", null);
+    }
+    
+    @GetMapping("/hot")
+    public Result<List<BoxSeries>> getHotSeries(
+        @RequestParam(defaultValue = "3") int limit
+    ) {
+        List<BoxSeries> hotSeries = boxSeriesService.getHotSeries(limit);
+        return Result.success(hotSeries);
     }
 } 

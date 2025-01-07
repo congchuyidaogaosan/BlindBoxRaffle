@@ -5,6 +5,10 @@ import com.mysterybox.mapper.BoxSeriesMapper;
 import com.mysterybox.service.BoxSeriesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 
 import java.util.List;
 
@@ -15,8 +19,8 @@ public class BoxSeriesServiceImpl implements BoxSeriesService {
     private BoxSeriesMapper boxSeriesMapper;
 
     @Override
-    public List<BoxSeries> getAllSeries() {
-        List<BoxSeries> boxSeries = boxSeriesMapper.selectList(null);
+    public List<BoxSeries> getAllSeries(String name, Integer status) {
+        List<BoxSeries> boxSeries = boxSeriesMapper.findByNameAndStatus(name, status);
         return boxSeries;
     }
 
@@ -43,5 +47,10 @@ public class BoxSeriesServiceImpl implements BoxSeriesService {
     @Override
     public void deleteSeries(Long id) {
         int i = boxSeriesMapper.deleteById(id);
+    }
+
+    @Override
+    public List<BoxSeries> getHotSeries(int limit) {
+        return boxSeriesMapper.findHotSeries(limit);
     }
 }

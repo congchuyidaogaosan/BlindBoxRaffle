@@ -1,43 +1,52 @@
-<view class="container">
-  <!-- 热门盲盒轮播图 -->
-  <view class="swiper-container">
-    <swiper 
-      class="hot-swiper" 
-      indicator-dots
-      autoplay
-      circular
-      interval="3000"
-      duration="500"
-      indicator-color="rgba(255, 255, 255, .3)"
-      indicator-active-color="#fff"
-    >
-      <swiper-item wx:for="{{hotStyles}}" wx:key="id" class="swiper-item">
-        <image src="{{item.imageUrl}}" mode="aspectFill" class="slide-image" />
-        <view class="slide-info">
-          <view class="slide-name">{{item.name}}</view>
-          <view class="slide-price">¥{{item.price}}</view>
-        </view>
-      </swiper-item>
-    </swiper>
-  </view>
+<!--index.wxml-->
+<navigation-bar title="Weixin" back="{{false}}" color="black" background="#FFF"></navigation-bar>
+<scroll-view 
+  class="scrollarea" 
+  scroll-y 
+  type="list"
+  refresher-enabled="{{true}}"
+  refresher-triggered="{{refreshing}}"
+  bindrefresherrefresh="onRefresh"
+>
+  <view class="container">
+    <!-- 热门盲盒轮播图 -->
+    <view class="swiper-container">
+      <swiper 
+        class="hot-swiper" 
+        indicator-dots
+        autoplay
+        circular
+        interval="3000"
+        duration="500"
+        indicator-color="rgba(255, 255, 255, .3)"
+        indicator-active-color="#fff"
+        style="height: 360rpx;"
+      >
+        <swiper-item wx:for="{{hotSeries}}" wx:key="id" class="swiper-item">
+          <image 
+            src="{{item.imageUrl}}" 
+            mode="aspectFill" 
+            class="slide-image"
+          />
+        </swiper-item>
+      </swiper>
+    </view>
 
-  <!-- 系列列表 -->
-  <view class="series-list">
-    <view class="series-item" 
-          wx:for="{{seriesList}}" 
-          wx:key="id"
-          data-id="{{item.id}}"
-          bindtap="goToDetail">
-      <image src="{{item.imageUrl}}" mode="aspectFill" />
-      <view class="info">
-        <text class="name">{{item.name}}</text>
-        <text class="desc">{{item.description}}</text>
+    <!-- 其他内容 -->
+    <view class="content">
+      <view class="series-grid">
+        <view class="series-item" 
+              wx:for="{{seriesList}}" 
+              wx:key="id"
+              data-id="{{item.id}}"
+              bindtap="goToDetail">
+          <image src="{{item.imageUrl}}" mode="aspectFill" />
+          <view class="info">
+            <text class="name">{{item.name}}</text>
+            <text class="desc">{{item.description}}</text>
+          </view>
+        </view>
       </view>
     </view>
   </view>
-
-  <!-- 加载中提示 -->
-  <view class="loading" wx:if="{{loading}}">
-    <text>加载中...</text>
-  </view>
-</view> 
+</scroll-view>

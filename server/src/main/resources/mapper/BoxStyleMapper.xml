@@ -29,11 +29,14 @@
         WHERE bs.id = #{id}
     </select>
     
-    <select id="findBySeriesId" resultMap="boxStyleMap">
-        SELECT bs.*, bse.name as series_name 
-        FROM box_style bs
-        LEFT JOIN box_series bse ON bs.series_id = bse.id
-        WHERE bs.series_id = #{seriesId}
+    <select id="findBySeriesId" resultType="com.mysterybox.entity.BoxStyle">
+        SELECT 
+            s.*,
+            bs.price as price
+        FROM box_style s
+        LEFT JOIN box_series bs ON s.series_id = bs.id
+        WHERE s.series_id = #{seriesId}
+        ORDER BY s.probability DESC
     </select>
     
     <select id="findBySeriesIdAndStatus" resultMap="boxStyleMap">
@@ -82,5 +85,21 @@
         GROUP BY bs.id, bs.name
         ORDER BY sales_count DESC
         LIMIT 10
+    </select>
+    
+    <select id="findByNameAndSeriesId" resultType="com.mysterybox.entity.BoxStyle">
+        SELECT 
+            s.*,
+            bs.price as price
+        FROM box_style s
+        LEFT JOIN box_series bs ON s.series_id = bs.id
+        <where>
+            <if test="name != null and name != ''">
+                AND s.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="seriesId != null">
+                AND s.series_id = #{seriesId}
+            </if>
+        </where>
     </select>
 </mapper> 

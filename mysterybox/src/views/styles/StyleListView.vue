@@ -1,6 +1,30 @@
 <template>
   <div class="style-list">
-    <div class="operation-bar">
+    <div class="filter-container">
+      <el-form :inline="true" :model="queryParams" class="search-form">
+        <el-form-item label="款式名称">
+          <el-input
+            v-model="queryParams.name"
+            placeholder="请输入款式名称"
+            clearable
+            @keyup.enter.native="handleSearch"
+          />
+        </el-form-item>
+        <el-form-item label="所属系列">
+          <el-select v-model="queryParams.seriesId" placeholder="请选择系列" clearable>
+            <el-option
+              v-for="item in seriesList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="handleSearch">查询</el-button>
+          <el-button @click="handleReset">重置</el-button>
+        </el-form-item>
+      </el-form>
       <el-button type="primary" @click="handleAdd">新增款式</el-button>
     </div>
     
@@ -8,7 +32,6 @@
       <el-table-column prop="id" label="ID" width="80" />
       <el-table-column prop="name" label="款式名称" />
       <el-table-column prop="series.name" label="所属系列" />
-      <el-table-column prop="price" label="价格" />
       <el-table-column prop="stock" label="库存" />
       <el-table-column prop="probability" label="抽取概率" />
       <el-table-column label="预览图">
@@ -20,11 +43,7 @@
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column prop="status" label="状态">
-        <template slot-scope="scope">
-          {{ scope.row.status === 1 ? '上架' : '下架' }}
-        </template>
-      </el-table-column>
+
       <el-table-column label="操作" width="250">
         <template slot-scope="scope">
           <el-button size="mini" @click="handleEdit(scope.row)">编辑</el-button>
@@ -49,9 +68,6 @@
         <el-form-item label="款式名称" prop="name">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
-        <el-form-item label="价格" prop="price">
-          <el-input-number v-model="form.price" :precision="2" :step="0.1" :min="0"></el-input-number>
-        </el-form-item>
         <el-form-item label="库存" prop="stock">
           <el-input-number v-model="form.stock" :min="0"></el-input-number>
         </el-form-item>
@@ -75,9 +91,6 @@
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
-        <el-form-item label="状态">
-          <el-switch v-model="form.status" :active-value="1" :inactive-value="0" />
-        </el-form-item>
       </el-form>
       <div slot="footer">
         <el-button @click="dialogVisible = false">取消</el-button>
@@ -99,30 +112,48 @@ export default {
       dialogVisible: false,
       dialogTitle: '',
       loading: false,
-      uploadUrl: process.env.VUE_APP_BASE_API + '/upload',
+      uploadUrl: '/api/upload',
+      queryParams: {
+        name: '',
+        seriesId: '',
+        pageNum: 1,
+        pageSize: 10
+      },
       form: {
         seriesId: '',
         name: '',
-        price: 0,
         stock: 0,
         probability: 0,
         imageUrl: '',
-        status: 1
       },
       rules: {
         seriesId: [{ required: true, message: '请选择系列', trigger: 'change' }],
         name: [{ required: true, message: '请输入款式名称', trigger: 'blur' }],
-        price: [{ required: true, message: '请输入价格', trigger: 'blur' }],
         imageUrl: [{ required: true, message: '请上传预览图', trigger: 'change' }]
       }
     }
   },
   methods: {
+    handleSearch() {
+      this.queryParams.pageNum = 1
+      this.fetchData()
+    },
+
+    handleReset() {
+      this.queryParams = {
+        name: '',
+        seriesId: '',
+        pageNum: 1,
+        pageSize: 10
+      }
+      this.fetchData()
+    },
+
     async fetchData() {
       this.loading = true
       try {
         const [styleRes, seriesRes] = await Promise.all([
-          getStyleList(),
+          getStyleList(this.queryParams),
           getSeriesList()
         ])
         this.styleList = styleRes.data
@@ -142,11 +173,9 @@ export default {
         this.form = {
           seriesId: '',
           name: '',
-          price: 0,
           stock: 0,
           probability: 0,
           imageUrl: '',
-          status: 1
         }
       })
     },
@@ -197,7 +226,7 @@ export default {
     },
     
     handleUploadSuccess(res) {
-      this.form.imageUrl = res.url
+      this.form.imageUrl = res.data
     },
     
     beforeUpload(file) {
@@ -242,5 +271,17 @@ export default {
   width: 100px;
   height: 100px;
   display: block;
+}
+
+.filter-container {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.search-form {
+  flex: 1;
+  margin-right: 10px;
 }
 </style> 

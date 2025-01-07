@@ -3,6 +3,7 @@
     "pages/draw/index",
     "pages/series/index",
     "pages/draw/result",
+    "pages/series/detail",
     "pages/user/index",
     "pages/user/orders",
     "pages/user/draws",

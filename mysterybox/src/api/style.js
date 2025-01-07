@@ -1,17 +1,18 @@
 import request from '@/utils/request'
 
 // 获取款式列表
-export function getStyleList() {
+export function getStyleList(params) {
   return request({
-    url: '/api/styles',
-    method: 'get'
+    url: '/api/styles/list',
+    method: 'get',
+    params
   })
 }
 
 // 创建款式
 export function createStyle(data) {
   return request({
-    url: '/api/styles',
+    url: '/api/styles/create',
     method: 'post',
     data
   })
@@ -20,8 +21,8 @@ export function createStyle(data) {
 // 更新款式
 export function updateStyle(id, data) {
   return request({
-    url: `/api/styles/${id}`,
-    method: 'put',
+    url: `/api/styles/update/${id}`,
+    method: 'post',
     data
   })
 }
@@ -29,15 +30,15 @@ export function updateStyle(id, data) {
 // 删除款式
 export function deleteStyle(id) {
   return request({
-    url: `/api/styles/${id}`,
-    method: 'delete'
+    url: `/api/styles/delete/${id}`,
+    method: 'post'
   })
 }
 
 // 获取款式详情
 export function getStyleById(id) {
   return request({
-    url: `/api/styles/${id}`,
+    url: `/api/styles/detail/${id}`,
     method: 'get'
   })
 }
@@ -47,7 +48,7 @@ export function uploadStyleImage(id, file) {
   const formData = new FormData()
   formData.append('file', file)
   return request({
-    url: `/api/styles/${id}/image`,
+    url: `/api/styles/image/${id}`,
     method: 'post',
     data: formData,
     headers: {

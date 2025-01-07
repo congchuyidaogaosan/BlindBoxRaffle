@@ -46,6 +46,8 @@ wx:
   miniapp:
     appid: your_appid
     secret: your_secret
+  appId: your_app_id
+  appSecret: your_app_secret
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml
@@ -54,5 +56,5 @@ mybatis:
     map-underscore-to-camel-case: true
 
 jwt:
-  secret: mysteryBoxSecretKey
+  secret: your_jwt_secret_key
   expiration: 86400000  # 24小时

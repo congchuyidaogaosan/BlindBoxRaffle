@@ -65,7 +65,8 @@
         GROUP BY DATE(create_time)
         ORDER BY date
     </select>
-    
+
+
     <select id="getDrawPreferences" resultType="com.mysterybox.dto.DrawPreference">
         SELECT 
             s.name as seriesName,

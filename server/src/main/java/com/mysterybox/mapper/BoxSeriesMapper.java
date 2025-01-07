@@ -8,8 +8,10 @@ import java.util.List;
 
 @Mapper
 public interface BoxSeriesMapper extends BaseMapper<BoxSeries> {
-    List<BoxSeries> findAll();
     BoxSeries findById(@Param("id") Long id);
-    List<BoxSeries> findByStatus(@Param("status") Integer status);
-   
+    List<BoxSeries> findByNameAndStatus(
+        @Param("name") String name,
+        @Param("status") Integer status
+    );
+    List<BoxSeries> findHotSeries(@Param("limit") int limit);
 } 

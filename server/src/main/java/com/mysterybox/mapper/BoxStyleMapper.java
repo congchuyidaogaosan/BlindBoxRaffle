@@ -11,7 +11,10 @@ import java.util.List;
 
 @Mapper
 public interface BoxStyleMapper extends BaseMapper<BoxStyle> {
-    List<BoxStyle> findAll();
+    List<BoxStyle> findByNameAndSeriesId(
+        @Param("name") String name,
+        @Param("seriesId") Long seriesId
+    );
     BoxStyle findById(@Param("id") Long id);
     List<BoxStyle> findBySeriesId(@Param("seriesId") Long seriesId);
     List<BoxStyle> findBySeriesIdAndStatus(@Param("seriesId") Long seriesId, @Param("status") Integer status);
