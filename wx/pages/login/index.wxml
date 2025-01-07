@@ -1,0 +1,15 @@
+<view class="container">
+  <view class="login-box">
+    <image class="logo" src="/images/logo.png" mode="aspectFit"/>
+    <view class="title">欢迎使用神秘盒子</view>
+    <view class="desc">请授权登录以使用完整功能</view>
+    
+    <button 
+      class="login-btn"
+      open-type="getUserInfo" 
+      bindgetuserinfo="handleLogin"
+    >
+      微信一键登录
+    </button>
+  </view>
+</view> 
