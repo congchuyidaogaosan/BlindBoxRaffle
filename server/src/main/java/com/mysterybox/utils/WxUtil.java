@@ -3,16 +3,17 @@ package com.mysterybox.utils;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 @Component
 public class WxUtil {
 
-    @Value("${wx.appId}")
+    @Value("${wx.miniapp.appid}")
     private String appId;
 
-    @Value("${wx.appSecret}")
+    @Value("${wx.miniapp.secret}")
     private String appSecret;
 
     private final RestTemplate restTemplate = new RestTemplate();
@@ -24,12 +25,15 @@ public class WxUtil {
             appId, appSecret, code
         );
 
+        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
         try {
-            String response = restTemplate.getForObject(url, String.class);
-            JsonNode jsonNode = objectMapper.readTree(response);
-            return jsonNode.get("openid").asText();
+            JsonNode root = objectMapper.readTree(response.getBody());
+            if (root.has("errcode") && root.get("errcode").asInt() != 0) {
+                throw new RuntimeException("获取openId失败：" + root.get("errmsg").asText());
+            }
+            return root.get("openid").asText();
         } catch (Exception e) {
-            throw new RuntimeException("获取openId失败", e);
+            throw new RuntimeException("解析微信返回数据失败", e);
         }
     }
 } 

@@ -18,6 +18,7 @@ import java.util.List;
 import java.math.BigDecimal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.Authentication;
 
 @Service
 @Transactional
@@ -31,6 +32,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private WxUtil wxUtil;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @Override
     public List<User> getAllUsers() {
@@ -53,6 +57,7 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("Username already exists");
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setBalance(BigDecimal.ZERO);
         userMapper.insert(user);
         return user;
     }
@@ -101,54 +106,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getCurrentUser() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username;
-        if (principal instanceof UserDetails) {
-            username = ((UserDetails)principal).getUsername();
-        } else {
-            username = principal.toString();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return null;
         }
-        return findByUsername(username);
+        String openId = authentication.getName();
+        return findByOpenId(openId);
     }
 
     @Override
     @Transactional
     public LoginResponse login(LoginRequest request) {
-        // 获取openId
-        String openId = wxUtil.getOpenId(request.getCode());
-        
-        // 查找或创建用户
-        User user = userMapper.findByOpenId(openId);
-        if (user == null) {
-            user = new User();
-            user.setOpenId(openId);
-            user.setStatus(1);
-            user.setCreateTime(new Date());
-        }
-        
-        // 更新用户信息
-        LoginRequest.WxUserInfo wxUserInfo = request.getUserInfo();
-        BeanUtils.copyProperties(wxUserInfo, user);
-        user.setLastLoginTime(new Date());
-        user.setUpdateTime(new Date());
-        
-        if (user.getId() == null) {
-            userMapper.insert(user);
-        } else {
-            userMapper.updateById(user);
-        }
+        // 这个方法可以保留，但不会被使用，因为我们现在使用微信登录
+        throw new UnsupportedOperationException("不支持的登录方式");
+    }
 
-        // 生成token
-        String token = JwtUtil.generateToken(user.getId());
-
-        // 构建返回数据
-        LoginResponse response = new LoginResponse();
-        response.setToken(token);
-        
-        LoginResponse.UserInfo userInfo = new LoginResponse.UserInfo();
-        BeanUtils.copyProperties(user, userInfo);
-        response.setUserInfo(userInfo);
-
-        return response;
+    @Override
+    public User findByOpenId(String openId) {
+        return userMapper.findByOpenId(openId);
     }
 } 

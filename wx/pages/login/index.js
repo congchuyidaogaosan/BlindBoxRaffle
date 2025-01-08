@@ -22,7 +22,7 @@ Page({
     try {
       // 获取code
       const { code } = await wx.login()
-      
+      console.log(code,e.detail.userInfo);
       // 调用后端登录接口
       const res = await login({
         code,

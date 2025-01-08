@@ -4,6 +4,7 @@
     "pages/series/index",
     "pages/series/detail",
     "pages/draw/result",
+    "pages/login/index",
     "pages/user/index",
     "pages/user/orders",
     "pages/user/draws",

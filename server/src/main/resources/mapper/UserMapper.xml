@@ -76,4 +76,26 @@
     <select id="findByOpenId" resultMap="userMap">
         SELECT * FROM user WHERE open_id = #{openId}
     </select>
+    
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO user (
+            open_id, nickname, avatar_url, gender, 
+            country, province, city, language, 
+            role, create_time, update_time
+        ) VALUES (
+            #{openId}, #{nickname}, #{avatarUrl}, #{gender},
+            #{country}, #{province}, #{city}, #{language},
+            #{role}, NOW(), NOW()
+        )
+    </insert>
+    
+    <update id="updateUser">
+        UPDATE user
+        SET 
+            nickname = #{nickname},
+            avatar_url = #{avatarUrl},
+            gender = #{gender},
+            update_time = NOW()
+        WHERE id = #{id}
+    </update>
 </mapper> 

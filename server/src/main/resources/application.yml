@@ -44,8 +44,8 @@ file:
 
 wx:
   miniapp:
-    appid: your_appid
-    secret: your_secret
+    appid: wx1234567890abcdef
+    secret: abcdef1234567890abcdef1234567890
   appId: your_app_id
   appSecret: your_app_secret
 

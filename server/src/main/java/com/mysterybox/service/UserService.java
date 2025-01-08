@@ -17,4 +17,5 @@ public interface UserService {
     User findByUsername(String username);
     User getCurrentUser();
     LoginResponse login(LoginRequest request);
+    User findByOpenId(String openId);
 } 
