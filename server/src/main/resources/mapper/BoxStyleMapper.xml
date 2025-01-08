@@ -10,6 +10,7 @@
         <result property="probability" column="probability"/>
         <result property="imageUrl" column="image_url"/>
         <result property="status" column="status"/>
+        <result property="isDeleted" column="is_deleted"/>
         <association property="series" javaType="com.mysterybox.entity.BoxSeries">
             <id property="id" column="series_id"/>
             <result property="name" column="series_name"/>
@@ -20,6 +21,7 @@
         SELECT bs.*, bse.name as series_name 
         FROM box_style bs
         LEFT JOIN box_series bse ON bs.series_id = bse.id
+        WHERE bs.is_deleted = 0
     </select>
     
     <select id="findById" resultMap="boxStyleMap">
@@ -27,53 +29,58 @@
         FROM box_style bs
         LEFT JOIN box_series bse ON bs.series_id = bse.id
         WHERE bs.id = #{id}
+        AND bs.is_deleted = 0
     </select>
     
     <select id="findBySeriesId" resultType="com.mysterybox.entity.BoxStyle">
         SELECT 
-            s.*,
-            bs.price as price
-        FROM box_style s
-        LEFT JOIN box_series bs ON s.series_id = bs.id
-        WHERE s.series_id = #{seriesId}
-        ORDER BY s.probability DESC
+            bs.*,
+            bse.price as series_price,
+            bse.name as series_name,
+            bse.description as series_description
+        FROM box_style bs
+        LEFT JOIN box_series bse ON bs.series_id = bse.id
+        WHERE bs.series_id = #{seriesId}
+        AND bs.is_deleted = 0
+        ORDER BY bs.probability DESC
     </select>
     
     <select id="findBySeriesIdAndStatus" resultMap="boxStyleMap">
         SELECT bs.*, bse.name as series_name 
         FROM box_style bs
         LEFT JOIN box_series bse ON bs.series_id = bse.id
-        WHERE bs.series_id = #{seriesId} AND bs.status = #{status}
+        WHERE bs.series_id = #{seriesId} 
+        AND bs.status = #{status}
+        AND bs.is_deleted = 0
     </select>
-    
-    <insert id="insert" parameterType="com.mysterybox.entity.BoxStyle" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO box_style (series_id, name, description, price, stock, probability, image_url, status)
-        VALUES (#{series.id}, #{name}, #{description}, #{price}, #{stock}, #{probability}, #{imageUrl}, #{status})
-    </insert>
-    
-    <update id="update" parameterType="com.mysterybox.entity.BoxStyle">
-        UPDATE box_style
-        SET series_id = #{series.id},
-            name = #{name},
-            description = #{description},
-            price = #{price},
-            stock = #{stock},
-            probability = #{probability},
-            image_url = #{imageUrl},
-            status = #{status},
-            update_time = NOW()
-        WHERE id = #{id}
+
+    <select id="findByNameAndSeriesId" resultType="com.mysterybox.entity.BoxStyle">
+        SELECT 
+            bs.*,
+            bse.price as price
+        FROM box_style bs
+        LEFT JOIN box_series bse ON bs.series_id = bse.id
+        <where>
+            bs.is_deleted = 0
+            <if test="name != null and name != ''">
+                AND bs.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="seriesId != null">
+                AND bs.series_id = #{seriesId}
+            </if>
+        </where>
+    </select>
+
+    <update id="delete">
+        UPDATE box_style SET is_deleted = 1 WHERE id = #{id}
     </update>
-    
-    <delete id="delete">
-        DELETE FROM box_style WHERE id = #{id}
-    </delete>
     
     <select id="findDrawPreferences" resultType="com.mysterybox.dto.DrawPreference">
         SELECT bs.series_id, bse.name as series_name, COUNT(*) as draw_count
         FROM order_detail od
         JOIN box_style bs ON od.box_style_id = bs.id
         JOIN box_series bse ON bs.series_id = bse.id
+        WHERE bs.is_deleted = 0
         GROUP BY bs.series_id, bse.name
         ORDER BY draw_count DESC
     </select>
@@ -82,24 +89,9 @@
         SELECT bs.id, bs.name, COUNT(*) as sales_count
         FROM order_detail od
         JOIN box_style bs ON od.box_style_id = bs.id
+        WHERE bs.is_deleted = 0
         GROUP BY bs.id, bs.name
         ORDER BY sales_count DESC
         LIMIT 10
-    </select>
-    
-    <select id="findByNameAndSeriesId" resultType="com.mysterybox.entity.BoxStyle">
-        SELECT 
-            s.*,
-            bs.price as price
-        FROM box_style s
-        LEFT JOIN box_series bs ON s.series_id = bs.id
-        <where>
-            <if test="name != null and name != ''">
-                AND s.name LIKE CONCAT('%', #{name}, '%')
-            </if>
-            <if test="seriesId != null">
-                AND s.series_id = #{seriesId}
-            </if>
-        </where>
     </select>
 </mapper> 

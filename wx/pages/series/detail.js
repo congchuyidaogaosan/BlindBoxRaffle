@@ -5,11 +5,11 @@ Page({
     seriesId: null,
     seriesInfo: {},
     styleList: [],
-    lowestProb: 0,
     loading: false
   },
   
   onLoad(options) {
+    console.log('页面加载，参数:', options)
     this.setData({
       seriesId: options.id
     })
@@ -17,21 +17,24 @@ Page({
   },
   
   async fetchData() {
+    console.log('开始获取数据，seriesId:', this.data.seriesId)
     this.setData({ loading: true })
     try {
       const [seriesRes, stylesRes] = await Promise.all([
         getSeriesById(this.data.seriesId),
         getStylesBySeriesId(this.data.seriesId)
       ])
-
-      // 计算最低概率
-      const styleList = stylesRes.data || []
-      const lowestProb = Math.min(...styleList.map(item => item.probability))
-
+      
+      console.log('获取到系列信息:', seriesRes)
+      console.log('获取到款式列表:', stylesRes)
+      
+      if (stylesRes.data && stylesRes.data.length > 0) {
+        console.log('第一个款式的数据:', stylesRes.data[0])
+      }
+      
       this.setData({
         seriesInfo: seriesRes.data,
-        styleList,
-        lowestProb
+        styleList: stylesRes.data || []
       })
     } catch (error) {
       console.error('获取数据失败:', error)

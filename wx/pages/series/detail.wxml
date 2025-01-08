@@ -19,14 +19,16 @@
       <view class="style-item"
         wx:for="{{styleList}}" 
         wx:key="id"
+        bindtap="onDraw"
+        data-id="{{item.id}}"
       >
         <image src="{{item.imageUrl}}" mode="aspectFill" />
         <view class="info">
           <text class="name">{{item.name}}</text>
           <view class="prob-bar">
-            <view class="bar" style="width: {{item.probability}}%;"></view>
+            <view class="bar" style="width: {{item.probability * 100}}%;"></view>
           </view>
-          <text class="prob">{{item.probability}}%</text>
+          <text class="prob">{{item.probability * 100}}%</text>
         </view>
       </view>
     </view>

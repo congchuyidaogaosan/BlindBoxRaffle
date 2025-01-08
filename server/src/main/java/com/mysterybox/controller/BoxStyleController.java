@@ -1,13 +1,18 @@
 package com.mysterybox.controller;
 
 import com.mysterybox.common.Result;
+import com.mysterybox.dto.BoxStyleDTO;
 import com.mysterybox.dto.BoxStyleQuery;
+import com.mysterybox.entity.BoxSeries;
 import com.mysterybox.entity.BoxStyle;
+import com.mysterybox.service.BoxSeriesService;
 import com.mysterybox.service.BoxStyleService;
+import com.mysterybox.service.impl.BoxSeriesServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -17,8 +22,12 @@ public class BoxStyleController {
     @Autowired
     private BoxStyleService boxStyleService;
 
+
+    @Autowired
+    private BoxSeriesServiceImpl boxSeriesServiceImpl;
+
     @GetMapping("/list")
-    public Result<List<BoxStyle>> getAllStyles(
+    public Result<List<BoxStyleDTO>> getAllStyles(
         @RequestParam(required = false) String name,
         @RequestParam(required = false) Long seriesId
     ) {
@@ -26,7 +35,18 @@ public class BoxStyleController {
         query.setName(name);
         query.setSeriesId(seriesId);
         List<BoxStyle> styleList = boxStyleService.getAllStyles(query);
-        return Result.success(styleList);
+        ArrayList<BoxStyleDTO> boxStyleDTOS = new ArrayList<>();
+        if (styleList.size()>0) {
+            for(BoxStyle style : styleList) {
+
+
+                BoxSeries seriesById = boxSeriesServiceImpl.getSeriesById(style.getSeriesId());
+                BoxStyleDTO boxStyleDTO = new BoxStyleDTO(style, seriesById);
+                boxStyleDTOS.add(boxStyleDTO);
+
+            }
+        }
+        return Result.success(boxStyleDTOS);
     }
 
     @GetMapping("/series/{seriesId}")

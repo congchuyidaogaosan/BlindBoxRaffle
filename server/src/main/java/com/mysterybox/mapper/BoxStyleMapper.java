@@ -19,6 +19,7 @@ public interface BoxStyleMapper extends BaseMapper<BoxStyle> {
     List<BoxStyle> findBySeriesId(@Param("seriesId") Long seriesId);
     List<BoxStyle> findBySeriesIdAndStatus(@Param("seriesId") Long seriesId, @Param("status") Integer status);
 
+   // int insert(BoxStyle style);
     void update(BoxStyle style);
     void delete(@Param("id") Long id);
     List<DrawPreference> findDrawPreferences();
