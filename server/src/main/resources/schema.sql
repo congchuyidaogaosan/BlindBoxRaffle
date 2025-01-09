@@ -11,7 +11,7 @@
  Target Server Version : 80300
  File Encoding         : 65001
 
- Date: 07/01/2025 23:24:30
+ Date: 09/01/2025 11:40:55
 */
 
 SET NAMES utf8mb4;
@@ -87,13 +87,13 @@ CREATE TABLE `box_style` (
   PRIMARY KEY (`id`),
   KEY `series_id` (`series_id`),
   CONSTRAINT `box_style_ibfk_1` FOREIGN KEY (`series_id`) REFERENCES `box_series` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of box_style
 -- ----------------------------
 BEGIN;
-INSERT INTO `box_style` (`id`, `series_id`, `name`, `description`, `stock`, `probability`, `image_url`, `create_time`, `update_time`, `is_deleted`) VALUES (1, 1, '火影忍者-鸣人', '九尾查克拉模式', 100, 0.08, 'http://localhost:8081/uploads/ca31f5b9-749a-4d8e-b19d-7cdfd9b825f6.jpeg', '2025-01-02 10:58:28', '2025-01-07 14:58:41', 0);
+INSERT INTO `box_style` (`id`, `series_id`, `name`, `description`, `stock`, `probability`, `image_url`, `create_time`, `update_time`, `is_deleted`) VALUES (1, 1, '火影忍者-鸣人', '九尾查克拉模式', 100, 0.09, 'http://localhost:8081/uploads/8946b3b9-32a3-4cb9-a7d7-66610a6375d8.png', '2025-01-02 10:58:28', '2025-01-07 14:58:41', 0);
 INSERT INTO `box_style` (`id`, `series_id`, `name`, `description`, `stock`, `probability`, `image_url`, `create_time`, `update_time`, `is_deleted`) VALUES (2, 1, '海贼王-路飞', '四档形态', 100, 0.05, 'http://localhost:8081/uploads/luffy.png', '2025-01-02 10:58:28', '2025-01-07 13:23:44', 0);
 INSERT INTO `box_style` (`id`, `series_id`, `name`, `description`, `stock`, `probability`, `image_url`, `create_time`, `update_time`, `is_deleted`) VALUES (3, 1, '七龙珠-悟空', '超级赛亚人', 100, 0.05, 'http://localhost:8081/uploads/goku.png', '2025-01-02 10:58:28', '2025-01-07 13:23:46', 0);
 INSERT INTO `box_style` (`id`, `series_id`, `name`, `description`, `stock`, `probability`, `image_url`, `create_time`, `update_time`, `is_deleted`) VALUES (4, 1, '灌篮高手-樱木', '红头暴扣', 100, 0.05, 'http://localhost:8081/uploads/sakuragi.png', '2025-01-02 10:58:28', '2025-01-07 13:23:47', 0);
@@ -113,6 +113,8 @@ INSERT INTO `box_style` (`id`, `series_id`, `name`, `description`, `stock`, `pro
 INSERT INTO `box_style` (`id`, `series_id`, `name`, `description`, `stock`, `probability`, `image_url`, `create_time`, `update_time`, `is_deleted`) VALUES (18, 4, '美琪', '星光闪耀', 100, 0.05, 'http://localhost:8081/uploads/miki.png', '2025-01-02 10:58:28', '2025-01-07 13:24:05', 0);
 INSERT INTO `box_style` (`id`, `series_id`, `name`, `description`, `stock`, `probability`, `image_url`, `create_time`, `update_time`, `is_deleted`) VALUES (19, 4, '小忧', '月光幻想', 100, 0.05, 'http://localhost:8081/uploads/yu.png', '2025-01-02 10:58:28', '2025-01-07 13:24:06', 0);
 INSERT INTO `box_style` (`id`, `series_id`, `name`, `description`, `stock`, `probability`, `image_url`, `create_time`, `update_time`, `is_deleted`) VALUES (20, 4, '小焰', '时间守护者', 100, 0.05, 'http://localhost:8081/uploads/homura.png', '2025-01-02 10:58:28', '2025-01-07 13:24:08', 0);
+INSERT INTO `box_style` (`id`, `series_id`, `name`, `description`, `stock`, `probability`, `image_url`, `create_time`, `update_time`, `is_deleted`) VALUES (21, 2, '1', NULL, 3, 0.03, 'http://localhost:8081/uploads/47cfd866-82d6-4415-aab8-d3c8015220b8.png', '2025-01-08 20:39:07', '2025-01-08 20:39:13', 1);
+INSERT INTO `box_style` (`id`, `series_id`, `name`, `description`, `stock`, `probability`, `image_url`, `create_time`, `update_time`, `is_deleted`) VALUES (22, 1, '1', NULL, 1, 0.01, 'http://localhost:8081/uploads/86f42381-a3bd-4e19-8324-f20b9be61318.png', '2025-01-08 22:04:38', '2025-01-08 22:04:41', 1);
 COMMIT;
 
 -- ----------------------------
@@ -314,7 +316,7 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `id` bigint NOT NULL AUTO_INCREMENT,
   `username` varchar(64) DEFAULT NULL COMMENT '用户名',
   `password` varchar(255) DEFAULT NULL COMMENT '密码',
   `nickname` varchar(64) DEFAULT NULL COMMENT '昵称',
@@ -322,14 +324,15 @@ CREATE TABLE `user` (
   `role` varchar(20) DEFAULT 'USER' COMMENT '角色',
   `balance` decimal(10,2) DEFAULT '0.00' COMMENT '余额',
   `open_id` varchar(64) DEFAULT NULL COMMENT '微信openId',
+  `sessionKey` varchar(255) DEFAULT NULL,
   `nick_name` varchar(64) DEFAULT NULL COMMENT '微信昵称',
   `avatar_url` varchar(255) DEFAULT NULL COMMENT '头像URL',
-  `gender` tinyint(4) DEFAULT NULL COMMENT '性别 0-未知 1-男 2-女',
+  `gender` tinyint DEFAULT NULL COMMENT '性别 0-未知 1-男 2-女',
   `country` varchar(64) DEFAULT NULL COMMENT '国家',
   `province` varchar(64) DEFAULT NULL COMMENT '省份',
   `city` varchar(64) DEFAULT NULL COMMENT '城市',
   `language` varchar(32) DEFAULT NULL COMMENT '语言',
-  `status` tinyint(4) DEFAULT '1' COMMENT '状态 0-禁用 1-正常',
+  `status` tinyint DEFAULT '1' COMMENT '状态 0-禁用 1-正常',
   `last_login_time` datetime DEFAULT NULL COMMENT '最后登录时间',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   `update_time` datetime DEFAULT NULL COMMENT '更新时间',
@@ -342,27 +345,27 @@ CREATE TABLE `user` (
 -- Records of user
 -- ----------------------------
 BEGIN;
-INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `create_time`, `update_time`, `role`, `balance`) VALUES (1, 'admin', '$2a$10$znpMPOXjgnVACmYJR.HM5OzlHcnG.i/MVTDrvG2TKu9/7ZpKDrj/6', '管理员', '13800000000', '2025-01-02 10:58:28', '2025-01-04 18:52:23', 'ADMIN', 0.00);
-INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `create_time`, `update_time`, `role`, `balance`) VALUES (2, 'user1', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '张三', '13800000001', '2025-01-02 10:58:28', '2025-01-02 10:58:28', 'USER', 100.00);
-INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `create_time`, `update_time`, `role`, `balance`) VALUES (3, 'user2', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '李四', '13800000002', '2025-01-02 10:58:28', '2025-01-02 10:58:28', 'USER', 200.00);
-INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `create_time`, `update_time`, `role`, `balance`) VALUES (4, 'user3', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '王五', '13800000003', '2025-01-02 10:58:28', '2025-01-02 10:58:28', 'USER', 300.00);
-INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `create_time`, `update_time`, `role`, `balance`) VALUES (5, 'user4', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '赵六', '13800000004', '2025-01-02 10:58:28', '2025-01-02 10:58:28', 'USER', 400.00);
-INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `create_time`, `update_time`, `role`, `balance`) VALUES (6, 'user5', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '孙七', '13800000005', '2025-01-02 10:58:28', '2025-01-02 10:58:28', 'USER', 500.00);
-INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `create_time`, `update_time`, `role`, `balance`) VALUES (7, 'user6', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '周八', '13800000006', '2025-01-02 10:58:28', '2025-01-02 10:58:28', 'USER', 600.00);
-INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `create_time`, `update_time`, `role`, `balance`) VALUES (8, 'user7', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '吴九', '13800000007', '2025-01-02 10:58:28', '2025-01-02 10:58:28', 'USER', 700.00);
-INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `create_time`, `update_time`, `role`, `balance`) VALUES (9, 'user8', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '郑十', '13800000008', '2025-01-02 10:58:28', '2025-01-02 10:58:28', 'USER', 800.00);
-INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `create_time`, `update_time`, `role`, `balance`) VALUES (10, 'user9', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '冯十一', '13800000009', '2025-01-02 10:58:28', '2025-01-02 10:58:28', 'USER', 900.00);
-INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `create_time`, `update_time`, `role`, `balance`) VALUES (11, 'user10', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '陈十二', '13800000010', '2025-01-02 10:58:28', '2025-01-02 10:58:28', 'USER', 1000.00);
-INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `create_time`, `update_time`, `role`, `balance`) VALUES (12, 'user11', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '褚十三', '13800000011', '2025-01-02 10:58:28', '2025-01-02 10:58:28', 'USER', 1100.00);
-INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `create_time`, `update_time`, `role`, `balance`) VALUES (13, 'user12', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '卫十四', '13800000012', '2025-01-02 10:58:28', '2025-01-02 10:58:28', 'USER', 1200.00);
-INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `create_time`, `update_time`, `role`, `balance`) VALUES (14, 'user13', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '蒋十五', '13800000013', '2025-01-02 10:58:28', '2025-01-02 10:58:28', 'USER', 1300.00);
-INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `create_time`, `update_time`, `role`, `balance`) VALUES (15, 'user14', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '沈十六', '13800000014', '2025-01-02 10:58:28', '2025-01-02 10:58:28', 'USER', 1400.00);
-INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `create_time`, `update_time`, `role`, `balance`) VALUES (16, 'user15', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '韩十七', '13800000015', '2025-01-02 10:58:28', '2025-01-02 10:58:28', 'USER', 1500.00);
-INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `create_time`, `update_time`, `role`, `balance`) VALUES (17, 'user16', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '杨十八', '13800000016', '2025-01-02 10:58:28', '2025-01-02 10:58:28', 'USER', 1600.00);
-INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `create_time`, `update_time`, `role`, `balance`) VALUES (18, 'user17', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '朱十九', '13800000017', '2025-01-02 10:58:28', '2025-01-02 10:58:28', 'USER', 1700.00);
-INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `create_time`, `update_time`, `role`, `balance`) VALUES (19, 'user18', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '秦二十', '13800000018', '2025-01-02 10:58:28', '2025-01-02 10:58:28', 'USER', 1800.00);
-INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `create_time`, `update_time`, `role`, `balance`) VALUES (20, 'user19', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '尤二一', '13800000019', '2025-01-02 10:58:28', '2025-01-02 10:58:28', 'USER', 1900.00);
-INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `create_time`, `update_time`, `role`, `balance`) VALUES (21, 'user20', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '许二二', '13800000020', '2025-01-02 10:58:28', '2025-01-02 10:58:28', 'USER', 2000.00);
+INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `role`, `balance`, `open_id`, `sessionKey`, `nick_name`, `avatar_url`, `gender`, `country`, `province`, `city`, `language`, `status`, `last_login_time`, `create_time`, `update_time`) VALUES (1, 'admin', '$2a$10$znpMPOXjgnVACmYJR.HM5OzlHcnG.i/MVTDrvG2TKu9/7ZpKDrj/6', '管理员', '13800000000', 'ADMIN', 0.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '2025-01-02 10:58:28', '2025-01-04 18:52:23');
+INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `role`, `balance`, `open_id`, `sessionKey`, `nick_name`, `avatar_url`, `gender`, `country`, `province`, `city`, `language`, `status`, `last_login_time`, `create_time`, `update_time`) VALUES (2, 'user1', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '张三', '13800000001', 'USER', 100.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '2025-01-02 10:58:28', '2025-01-02 10:58:28');
+INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `role`, `balance`, `open_id`, `sessionKey`, `nick_name`, `avatar_url`, `gender`, `country`, `province`, `city`, `language`, `status`, `last_login_time`, `create_time`, `update_time`) VALUES (3, 'user2', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '李四', '13800000002', 'USER', 200.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '2025-01-02 10:58:28', '2025-01-02 10:58:28');
+INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `role`, `balance`, `open_id`, `sessionKey`, `nick_name`, `avatar_url`, `gender`, `country`, `province`, `city`, `language`, `status`, `last_login_time`, `create_time`, `update_time`) VALUES (4, 'user3', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '王五', '13800000003', 'USER', 300.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '2025-01-02 10:58:28', '2025-01-02 10:58:28');
+INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `role`, `balance`, `open_id`, `sessionKey`, `nick_name`, `avatar_url`, `gender`, `country`, `province`, `city`, `language`, `status`, `last_login_time`, `create_time`, `update_time`) VALUES (5, 'user4', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '赵六', '13800000004', 'USER', 400.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '2025-01-02 10:58:28', '2025-01-02 10:58:28');
+INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `role`, `balance`, `open_id`, `sessionKey`, `nick_name`, `avatar_url`, `gender`, `country`, `province`, `city`, `language`, `status`, `last_login_time`, `create_time`, `update_time`) VALUES (6, 'user5', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '孙七', '13800000005', 'USER', 500.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '2025-01-02 10:58:28', '2025-01-02 10:58:28');
+INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `role`, `balance`, `open_id`, `sessionKey`, `nick_name`, `avatar_url`, `gender`, `country`, `province`, `city`, `language`, `status`, `last_login_time`, `create_time`, `update_time`) VALUES (7, 'user6', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '周八', '13800000006', 'USER', 600.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '2025-01-02 10:58:28', '2025-01-02 10:58:28');
+INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `role`, `balance`, `open_id`, `sessionKey`, `nick_name`, `avatar_url`, `gender`, `country`, `province`, `city`, `language`, `status`, `last_login_time`, `create_time`, `update_time`) VALUES (8, 'user7', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '吴九', '13800000007', 'USER', 700.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '2025-01-02 10:58:28', '2025-01-02 10:58:28');
+INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `role`, `balance`, `open_id`, `sessionKey`, `nick_name`, `avatar_url`, `gender`, `country`, `province`, `city`, `language`, `status`, `last_login_time`, `create_time`, `update_time`) VALUES (9, 'user8', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '郑十', '13800000008', 'USER', 800.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '2025-01-02 10:58:28', '2025-01-02 10:58:28');
+INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `role`, `balance`, `open_id`, `sessionKey`, `nick_name`, `avatar_url`, `gender`, `country`, `province`, `city`, `language`, `status`, `last_login_time`, `create_time`, `update_time`) VALUES (10, 'user9', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '冯十一', '13800000009', 'USER', 900.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '2025-01-02 10:58:28', '2025-01-02 10:58:28');
+INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `role`, `balance`, `open_id`, `sessionKey`, `nick_name`, `avatar_url`, `gender`, `country`, `province`, `city`, `language`, `status`, `last_login_time`, `create_time`, `update_time`) VALUES (11, 'user10', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '陈十二', '13800000010', 'USER', 1000.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '2025-01-02 10:58:28', '2025-01-02 10:58:28');
+INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `role`, `balance`, `open_id`, `sessionKey`, `nick_name`, `avatar_url`, `gender`, `country`, `province`, `city`, `language`, `status`, `last_login_time`, `create_time`, `update_time`) VALUES (12, 'user11', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '褚十三', '13800000011', 'USER', 1100.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '2025-01-02 10:58:28', '2025-01-02 10:58:28');
+INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `role`, `balance`, `open_id`, `sessionKey`, `nick_name`, `avatar_url`, `gender`, `country`, `province`, `city`, `language`, `status`, `last_login_time`, `create_time`, `update_time`) VALUES (13, 'user12', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '卫十四', '13800000012', 'USER', 1200.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '2025-01-02 10:58:28', '2025-01-02 10:58:28');
+INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `role`, `balance`, `open_id`, `sessionKey`, `nick_name`, `avatar_url`, `gender`, `country`, `province`, `city`, `language`, `status`, `last_login_time`, `create_time`, `update_time`) VALUES (14, 'user13', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '蒋十五', '13800000013', 'USER', 1300.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '2025-01-02 10:58:28', '2025-01-02 10:58:28');
+INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `role`, `balance`, `open_id`, `sessionKey`, `nick_name`, `avatar_url`, `gender`, `country`, `province`, `city`, `language`, `status`, `last_login_time`, `create_time`, `update_time`) VALUES (15, 'user14', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '沈十六', '13800000014', 'USER', 1400.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '2025-01-02 10:58:28', '2025-01-02 10:58:28');
+INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `role`, `balance`, `open_id`, `sessionKey`, `nick_name`, `avatar_url`, `gender`, `country`, `province`, `city`, `language`, `status`, `last_login_time`, `create_time`, `update_time`) VALUES (16, 'user15', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '韩十七', '13800000015', 'USER', 1500.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '2025-01-02 10:58:28', '2025-01-02 10:58:28');
+INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `role`, `balance`, `open_id`, `sessionKey`, `nick_name`, `avatar_url`, `gender`, `country`, `province`, `city`, `language`, `status`, `last_login_time`, `create_time`, `update_time`) VALUES (17, 'user16', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '杨十八', '13800000016', 'USER', 1600.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '2025-01-02 10:58:28', '2025-01-02 10:58:28');
+INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `role`, `balance`, `open_id`, `sessionKey`, `nick_name`, `avatar_url`, `gender`, `country`, `province`, `city`, `language`, `status`, `last_login_time`, `create_time`, `update_time`) VALUES (18, 'user17', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '朱十九', '13800000017', 'USER', 1700.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '2025-01-02 10:58:28', '2025-01-02 10:58:28');
+INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `role`, `balance`, `open_id`, `sessionKey`, `nick_name`, `avatar_url`, `gender`, `country`, `province`, `city`, `language`, `status`, `last_login_time`, `create_time`, `update_time`) VALUES (19, 'user18', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '秦二十', '13800000018', 'USER', 1800.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '2025-01-02 10:58:28', '2025-01-02 10:58:28');
+INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `role`, `balance`, `open_id`, `sessionKey`, `nick_name`, `avatar_url`, `gender`, `country`, `province`, `city`, `language`, `status`, `last_login_time`, `create_time`, `update_time`) VALUES (20, 'user19', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '尤二一', '13800000019', 'USER', 1900.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '2025-01-02 10:58:28', '2025-01-02 10:58:28');
+INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `role`, `balance`, `open_id`, `sessionKey`, `nick_name`, `avatar_url`, `gender`, `country`, `province`, `city`, `language`, `status`, `last_login_time`, `create_time`, `update_time`) VALUES (21, 'user20', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '许二二', '13800000020', 'USER', 2000.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '2025-01-02 10:58:28', '2025-01-02 10:58:28');
 COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;
