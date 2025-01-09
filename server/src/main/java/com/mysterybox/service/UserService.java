@@ -19,4 +19,6 @@ public interface UserService extends IService<User> {
     User getCurrentUser();
     LoginResponse login(LoginRequest request);
     User findByOpenId(String openId);
+
+    int newsave(User kehuEntity);
 } 

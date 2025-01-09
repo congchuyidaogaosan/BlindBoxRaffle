@@ -26,8 +26,8 @@ import org.springframework.web.client.RestTemplate;
 @RequestMapping("/api/WXLogin")
 public class LoginController {
 
-    private final String AppId = "wxb38fa1462130b7fd";
-    private final String AppSecret = "e7965d960c3a161ce50bff28eaf42b15";
+    private final String AppId = "wx958c331bb5b02d97";
+    private final String AppSecret = "d250907f3e38b48e1c0b78830a3f250d";
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -77,6 +77,7 @@ public class LoginController {
 
             return Result.success(loginresponse);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return Result.error(205, "微信登入失败");
         }
     }
@@ -88,10 +89,10 @@ public class LoginController {
         kehuEntity.setSessionkey(sessionKey);
         User info = kehuService.getOne(new QueryWrapper<User>().eq("open_id", openID));
         if(info == null) {
+            kehuService.newsave(kehuEntity);
 
-            kehuService.updateById(info);
         }else {
-            kehuService.createUser(kehuEntity);
+            kehuService.updateById(kehuEntity);
         }
 
      //   boolean openid = kehuService.saveOrUpdate(kehuEntity, new QueryWrapper<User>().eq("openid", openID));

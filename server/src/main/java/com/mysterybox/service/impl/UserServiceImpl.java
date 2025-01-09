@@ -126,4 +126,9 @@ public class UserServiceImpl  extends ServiceImpl<UserMapper, User> implements U
     public User findByOpenId(String openId) {
         return userMapper.findByOpenId(openId);
     }
-} 
+
+    @Override
+    public int newsave(User kehuEntity) {
+        return userMapper.insert(kehuEntity);
+    }
+}
