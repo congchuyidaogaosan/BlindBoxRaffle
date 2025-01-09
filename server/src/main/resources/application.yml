@@ -44,10 +44,8 @@ file:
 
 wx:
   miniapp:
-    appid: wx1234567890abcdef
-    secret: abcdef1234567890abcdef1234567890
-  appId: your_app_id
-  appSecret: your_app_secret
+    appid: wxb38fa1462130b7fd
+    secret: 9e7350f56437fe0c5fd106518a07a113
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml
