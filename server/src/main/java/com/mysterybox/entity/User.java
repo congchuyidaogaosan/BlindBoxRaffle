@@ -24,7 +24,7 @@ public class User {
     private String role;
     private BigDecimal balance;
     private String openId;
-
+    private String sessionkey;
     private String avatarUrl;
     private Integer gender;
     private String country;

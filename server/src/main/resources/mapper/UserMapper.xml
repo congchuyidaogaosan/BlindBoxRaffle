@@ -9,7 +9,7 @@
         <result column="phone" property="phone"/>
         <result column="role" property="role"/>
         <result column="balance" property="balance"/>
-        <result column="openid" property="openid"/>
+        <result column="openid" property="open_id"/>
         <result column="sessionkey" property="sessionkey"/>
     </resultMap>
 
@@ -17,9 +17,7 @@
         id, username, password, nickname, phone, role, balance
     </sql>
 
-    <select id="findById" resultType="com.mysterybox.entity.User">
-        SELECT * FROM user WHERE id = #{id}
-    </select>
+
 
     <select id="findByUsername" resultMap="BaseResultMap">
         SELECT 
@@ -28,9 +26,7 @@
         WHERE username = #{username}
     </select>
     
-    <select id="findAll" resultType="com.mysterybox.entity.User">
-        SELECT * FROM user
-    </select>
+
     
     <insert id="insert" parameterType="com.mysterybox.entity.User" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO user (username, password, nickname, phone, role, balance)
@@ -52,26 +48,22 @@
         DELETE FROM user WHERE id = #{id}
     </delete>
     
-    <select id="countByCreateTimeAfter" resultType="int">
-        SELECT COUNT(*) FROM user WHERE create_time > #{time}
-    </select>
-    
-    <select id="countActiveUsers" resultType="int">
-        SELECT COUNT(DISTINCT user_id) FROM login_log 
-        WHERE login_time > #{time}
-    </select>
 
     <resultMap id="userMap" type="com.mysterybox.entity.User">
         <id property="id" column="id"/>
         <result property="openId" column="open_id"/>
-        <result property="nickName" column="nick_name"/>
+        <result property="nickname" column="nickname"/>
         <result property="avatarUrl" column="avatar_url"/>
         <result property="gender" column="gender"/>
+        <result property="username" column="username"/>
         <result property="country" column="country"/>
         <result property="province" column="province"/>
         <result property="city" column="city"/>
         <result property="language" column="language"/>
         <result property="status" column="status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="sessionkey" column="sessionkey"/>
         <result property="lastLoginTime" column="last_login_time"/>
     </resultMap>
 

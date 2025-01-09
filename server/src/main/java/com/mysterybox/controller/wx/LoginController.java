@@ -26,8 +26,8 @@ import org.springframework.web.client.RestTemplate;
 @RequestMapping("/api/WXLogin")
 public class LoginController {
 
-    private final String AppId = "wx958c331bb5b02d97";
-    private final String AppSecret = "e69f8c1f7d8deb8892f2f2f964100178";
+    private final String AppId = "wxb38fa1462130b7fd";
+    private final String AppSecret = "e7965d960c3a161ce50bff28eaf42b15";
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -60,20 +60,20 @@ public class LoginController {
             String session_key = (String) jsonObject.get("session_key");
             String openid = (String) jsonObject.get("openid");
             //这个注释解开 和这个方法里边的注释解开  可以进行用户自行保存
-//            User kehuEntity = AddOrUpdate(openid, session_key);
+            User kehuEntity = AddOrUpdate(openid, session_key);
 
 
             // 3. 生成token
-//            String token = jwtUtil.generateToken(kehuEntity);
+            String token = jwtUtil.generateToken(kehuEntity);
             //暂时假用
-            String token = jwtUtil.generateToken(session_key, openid);
+            //String token = jwtUtil.generateToken(session_key, openid);
 
 
             // 4. 构建返回结果
             LoginResponse loginresponse = new LoginResponse();
             loginresponse.setToken(token);
             //记得换成用户   kehuEntity
-            loginresponse.setUserInfo(null);
+            loginresponse.setUserInfo(kehuEntity);
 
             return Result.success(loginresponse);
         } catch (Exception e) {
@@ -84,11 +84,19 @@ public class LoginController {
 
     private User AddOrUpdate(String openID, String sessionKey) {
         User kehuEntity = new User();
-//        kehuEntity.setOpenid(openID);
-//        kehuEntity.setSessionkey(sessionKey);
-        boolean openid = kehuService.saveOrUpdate(kehuEntity, new QueryWrapper<User>().eq("openid", openID));
+        kehuEntity.setOpenId(openID);
+        kehuEntity.setSessionkey(sessionKey);
+        User info = kehuService.getOne(new QueryWrapper<User>().eq("open_id", openID));
+        if(info == null) {
 
-        User info = kehuService.getOne(new QueryWrapper<User>().eq("openid", openID));
+            kehuService.updateById(info);
+        }else {
+            kehuService.createUser(kehuEntity);
+        }
+
+     //   boolean openid = kehuService.saveOrUpdate(kehuEntity, new QueryWrapper<User>().eq("openid", openID));
+
+
         return info;
     }
 

@@ -35,11 +35,10 @@ export function getStylesBySeriesId(seriesId) {
 }
 
 // 登录
-export function login(data) {
-  return request({
-    url: '/user/login',
-    method: 'POST',
-    data
-  })
-}
-
+export function login(data) {
+    return request({
+      url: '/WXLogin/setCode?code='+data.code,
+      method: 'POST',
+    })
+  }
+  
