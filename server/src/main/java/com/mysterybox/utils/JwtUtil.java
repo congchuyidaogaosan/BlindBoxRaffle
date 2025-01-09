@@ -25,21 +25,36 @@ public class JwtUtil {
         claims.put("id", user.getId());
         claims.put("openId", user.getOpenId());
         claims.put("role", user.getRole());
-        
+
         return Jwts.builder()
-            .setClaims(claims)
-            .setSubject(user.getOpenId())
-            .setIssuedAt(new Date())
-            .setExpiration(new Date(System.currentTimeMillis() + expiration))
-            .signWith(SignatureAlgorithm.HS512, secret)
-            .compact();
+                .setClaims(claims)
+                .setSubject(user.getOpenId())
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(SignatureAlgorithm.HS512, secret)
+                .compact();
     }
+
+    public String generateToken(String st1, String st2) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("openid", st1);
+        claims.put("session_key", st2);
+
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(SignatureAlgorithm.HS512, secret)
+                .compact();
+    }
+
 
     public Claims getClaimsFromToken(String token) {
         return Jwts.parser()
-            .setSigningKey(secret)
-            .parseClaimsJws(token)
-            .getBody();
+                .setSigningKey(secret)
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     public boolean validateToken(String token) {

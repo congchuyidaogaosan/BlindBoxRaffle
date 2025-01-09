@@ -9,6 +9,8 @@
         <result column="phone" property="phone"/>
         <result column="role" property="role"/>
         <result column="balance" property="balance"/>
+        <result column="openid" property="openid"/>
+        <result column="sessionkey" property="sessionkey"/>
     </resultMap>
 
     <sql id="Base_Column_List">

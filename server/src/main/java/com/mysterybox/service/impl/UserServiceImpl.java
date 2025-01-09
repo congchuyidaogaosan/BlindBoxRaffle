@@ -1,5 +1,6 @@
 package com.mysterybox.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.mysterybox.dto.LoginRequest;
 import com.mysterybox.dto.LoginResponse;
 import com.mysterybox.entity.User;
@@ -22,7 +23,7 @@ import org.springframework.security.core.Authentication;
 
 @Service
 @Transactional
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl  extends ServiceImpl<UserMapper, User> implements UserService {
 
     @Autowired
     private UserMapper userMapper;

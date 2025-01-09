@@ -5,10 +5,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 import java.math.BigDecimal;
 
@@ -17,7 +14,7 @@ import java.math.BigDecimal;
 @TableName("user")
 public class User {
     @Id
-@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @TableId(type = IdType.AUTO)
     private Long id;
     private String username;
@@ -38,4 +35,10 @@ public class User {
     private Date lastLoginTime;
     private Date createTime;
     private Date updateTime;
+
+//    @Column(name = "openid")
+//    private String openid;
+//    @Column(name = "sessionkey")
+//    private String sessionkey;
+
 } 
