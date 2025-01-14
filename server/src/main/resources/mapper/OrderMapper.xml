@@ -4,74 +4,71 @@
     <resultMap id="orderMap" type="com.mysterybox.entity.orders">
         <id property="id" column="id"/>
         <result property="userId" column="user_id"/>
+        <result property="boxStyleId" column="box_style_id"/>
         <result property="totalAmount" column="total_amount"/>
         <result property="status" column="status"/>
         <result property="createTime" column="create_time"/>
-        <collection property="orderDetails" ofType="com.mysterybox.entity.OrderDetail">
-            <id property="id" column="detail_id"/>
-            <result property="quantity" column="quantity"/>
-            <result property="price" column="price"/>
-            <association property="boxStyle" javaType="com.mysterybox.entity.BoxStyle">
-                <id property="id" column="style_id"/>
-                <result property="name" column="style_name"/>
-                <result property="imageUrl" column="image_url"/>
-            </association>
-        </collection>
+        <result property="updateTime" column="update_time"/>
+        
+        <!-- 款式信息 -->
+        <result property="styleName" column="style_name"/>
+        <result property="styleImageUrl" column="style_image_url"/>
+        
+        <!-- 系列信息 -->
+        <result property="seriesId" column="series_id"/>
+        <result property="seriesName" column="series_name"/>
+        <result property="seriesDescription" column="series_description"/>
     </resultMap>
 
-    <select id="findAll" resultMap="orderMap">
-        SELECT o.*, od.id as detail_id, od.quantity, od.price,
-               bs.id as style_id, bs.name as style_name, bs.image_url
-        FROM orders o
-        LEFT JOIN order_detail od ON o.id = od.order_id
-        LEFT JOIN box_style bs ON od.box_style_id = bs.id
-    </select>
-    
     <select id="findById" resultMap="orderMap">
-        SELECT o.*, od.id as detail_id, od.quantity, od.price,
-               bs.id as style_id, bs.name as style_name, bs.image_url
+        SELECT o.*, 
+               bs.name as style_name, 
+               bs.image_url as style_image_url,
+               bsr.id as series_id,
+               bsr.name as series_name,
+               bsr.description as series_description
         FROM orders o
-        LEFT JOIN order_detail od ON o.id = od.order_id
-        LEFT JOIN box_style bs ON od.box_style_id = bs.id
+        LEFT JOIN box_style bs ON o.box_style_id = bs.id
+        LEFT JOIN box_series bsr ON bs.series_id = bsr.id
         WHERE o.id = #{id}
     </select>
     
     <select id="findByUserId" resultMap="orderMap">
-        SELECT o.*, od.id as detail_id, od.quantity, od.price,
-               bs.id as style_id, bs.name as style_name, bs.image_url
+        SELECT o.*, 
+               bs.name as style_name, 
+               bs.image_url as style_image_url,
+               bsr.id as series_id,
+               bsr.name as series_name,
+               bsr.description as series_description
         FROM orders o
-        LEFT JOIN order_detail od ON o.id = od.order_id
-        LEFT JOIN box_style bs ON od.box_style_id = bs.id
+        LEFT JOIN box_style bs ON o.box_style_id = bs.id
+        LEFT JOIN box_series bsr ON bs.series_id = bsr.id
         WHERE o.user_id = #{userId}
+        ORDER BY o.create_time DESC
     </select>
     
-    <select id="findByCreateTimeBetween" resultMap="orderMap">
-        SELECT o.*, od.id as detail_id, od.quantity, od.price,
-               bs.id as style_id, bs.name as style_name, bs.image_url
-        FROM orders o
-        LEFT JOIN order_detail od ON o.id = od.order_id
-        LEFT JOIN box_style bs ON od.box_style_id = bs.id
-        WHERE o.create_time BETWEEN #{startTime} AND #{endTime}
-    </select>
-    
-    <insert id="insert" parameterType="com.mysterybox.entity.orders" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO orders (user_id, total_amount, status)
-        VALUES (#{userId}, #{totalAmount}, #{status})
+    <insert id="createOrder" parameterType="com.mysterybox.entity.orders" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO orders (
+            user_id, 
+            box_style_id,
+            total_amount,
+            status,
+            create_time,
+            update_time
+        ) VALUES (
+            #{userId},
+            #{boxStyleId},
+            #{totalAmount},
+            #{status},
+            NOW(),
+            NOW()
+        )
     </insert>
     
-    <update id="update" parameterType="com.mysterybox.entity.orders">
-        UPDATE orders
-        SET total_amount = #{totalAmount},
-            status = #{status},
+    <update id="updateOrder" parameterType="com.mysterybox.entity.orders">
+        UPDATE orders 
+        SET status = #{status},
             update_time = NOW()
         WHERE id = #{id}
     </update>
-    
-    <delete id="delete">
-        DELETE FROM orders WHERE id = #{id}
-    </delete>
-    
-    <select id="countByCreateTimeAfter" resultType="int">
-        SELECT COUNT(*) FROM orders WHERE create_time > #{time}
-    </select>
 </mapper> 

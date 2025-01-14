@@ -5,6 +5,7 @@ import com.mysterybox.dto.LoginRequest;
 import com.mysterybox.dto.LoginResponse;
 import com.mysterybox.entity.User;
 import java.util.List;
+import java.math.BigDecimal;
 
 public interface UserService extends IService<User> {
     List<User> getAllUsers();
@@ -14,11 +15,11 @@ public interface UserService extends IService<User> {
     User updateUser(User user);
     void deleteUser(Long id);
     boolean existsByUsername(String username);
-    void updateBalance(Long userId, java.math.BigDecimal newBalance);
     User findByUsername(String username);
     User getCurrentUser();
     LoginResponse login(LoginRequest request);
     User findByOpenId(String openId);
-
     int newsave(User kehuEntity);
+    
+    void updateBalance(Long userId, BigDecimal newBalance);
 } 

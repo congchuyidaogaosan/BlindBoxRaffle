@@ -1,12 +1,30 @@
 <view class="container">
   <view class="result" wx:if="{{result}}">
-    <view class="congrats">恭喜你抽中了</view>
-    <image src="{{result.boxStyle.imageUrl}}" mode="aspectFill" class="result-image" />
-    <view class="info">
-      <text class="name">{{result.boxStyle.name}}</text>
-      <text class="price">￥{{result.boxStyle.price}}</text>
+    <view class="congrats">
+      <text class="title">恭喜抽中</text>
+      <text class="series-name">{{result.order.seriesName}}</text>
     </view>
-    <button class="back-btn" bindtap="handleBack">返回</button>
+    
+    <view class="style-card">
+      <image 
+        src="{{result.order.styleImageUrl}}" 
+        mode="aspectFill" 
+        class="style-image"
+      />
+      <view class="style-info">
+        <text class="style-name">{{result.order.styleName}}</text>
+        <text class="price">¥{{result.order.totalAmount}}</text>
+      </view>
+    </view>
+
+    <view class="actions">
+      <button class="action-btn primary" bindtap="handleBack">
+        继续抽奖
+      </button>
+      <button class="action-btn" bindtap="goToOrders">
+        查看订单
+      </button>
+    </view>
   </view>
   
   <view class="loading" wx:if="{{loading}}">

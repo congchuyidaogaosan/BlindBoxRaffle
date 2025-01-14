@@ -22,7 +22,8 @@ public class User {
     private String nickname;
     private String phone;
     private String role;
-    private BigDecimal balance;
+    @Column(name = "balance")
+    private BigDecimal balance = BigDecimal.ZERO;
     private String openId;
     private String sessionkey;
     private String avatarUrl;

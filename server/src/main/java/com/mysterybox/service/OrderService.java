@@ -1,12 +1,11 @@
 package com.mysterybox.service;
 
-
 import com.mysterybox.entity.OrderDetail;
 import com.mysterybox.entity.orders;
+import com.mysterybox.dto.OrderDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
 
 public interface OrderService {
     List<orders> getAllOrders();
@@ -18,4 +17,5 @@ public interface OrderService {
     void deleteOrder(Long id);
     void addOrderDetail(Long orderId, OrderDetail detail);
     List<OrderDetail> getOrderDetails(Long orderId);
+    List<OrderDTO> getOrdersByUser(Long userId, String status);
 } 

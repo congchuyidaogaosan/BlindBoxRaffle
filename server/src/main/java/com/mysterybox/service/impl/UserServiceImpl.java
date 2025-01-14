@@ -91,13 +91,15 @@ public class UserServiceImpl  extends ServiceImpl<UserMapper, User> implements U
     }
 
     @Override
+    @Transactional
     public void updateBalance(Long userId, BigDecimal newBalance) {
         User user = getUserById(userId);
-        if (user == null) {
-            throw new RuntimeException("User not found");
+        if (user != null) {
+            user.setBalance(newBalance);
+            userMapper.updateById(user);
+        } else {
+            throw new RuntimeException("用户不存在");
         }
-        user.setBalance(newBalance);
-        userMapper.updateById(user);
     }
 
     @Override

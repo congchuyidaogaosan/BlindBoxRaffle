@@ -18,13 +18,23 @@ Page({
     this.setData({ loading: true })
     try {
       const res = await getOrderById(this.data.orderId)
-      if (res.statusCode === 200) {
+      console.log('抽奖结果:', res)
+      
+      if (res.code === 200) {
         this.setData({
-          result: res.data
+          result: {
+            order: res.data
+          }
         })
+      } else {
+        throw new Error(res.message || '获取数据失败')
       }
     } catch (error) {
       console.error('获取抽取结果失败', error)
+      wx.showToast({
+        title: error.message || '获取结果失败',
+        icon: 'none'
+      })
     } finally {
       this.setData({ loading: false })
     }
@@ -32,5 +42,11 @@ Page({
   
   handleBack() {
     wx.navigateBack()
+  },
+  
+  goToOrders() {
+    wx.navigateTo({
+      url: '/pages/user/orders'
+    })
   }
 }) 

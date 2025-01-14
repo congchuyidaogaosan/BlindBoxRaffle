@@ -10,6 +10,9 @@ import com.mysterybox.utils.WxUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
@@ -83,5 +86,47 @@ public class UserController {
         
         User updatedUser = userService.updateUser(currentUser);
         return Result.success(updatedUser);
+    }
+
+    // 获取钱包余额
+    @GetMapping("/wallet/balance")
+    public Result<BigDecimal> getWalletBalance(@RequestParam Long userId) {
+        try {
+            User user = userService.getUserById(userId);
+            if (user == null) {
+                return Result.error("用户不存在");
+            }
+            return Result.success(user.getBalance());
+        } catch (Exception e) {
+            return Result.error("获取余额失败: " + e.getMessage());
+        }
+    }
+
+    // 充值
+    @PostMapping("/wallet/recharge")
+    public Result<BigDecimal> recharge(
+            @RequestParam Long userId,
+            @RequestParam BigDecimal amount) {
+        System.out.println(userId+ ""+amount);
+        try {
+            if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+                return Result.error("充值金额必须大于0");
+            }
+            
+            User user = userService.getUserById(userId);
+            if (user == null) {
+                return Result.error("用户不存在");
+            }
+            
+            // 计算新余额
+            BigDecimal newBalance = user.getBalance().add(amount);
+            
+            // 更新用户余额
+            userService.updateBalance(userId, newBalance);
+            
+            return Result.success("充值成功", newBalance);
+        } catch (Exception e) {
+            return Result.error("充值失败: " + e.getMessage());
+        }
     }
 } 

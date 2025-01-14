@@ -5,11 +5,13 @@ import com.mysterybox.entity.OrderDetail;
 import com.mysterybox.entity.orders;
 import com.mysterybox.mapper.OrderMapper;
 import com.mysterybox.service.OrderService;
+import com.mysterybox.dto.OrderDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -25,8 +27,10 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public orders getOrderById(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("订单ID不能为空");
+        }
         return orderMapper.findById(id);
-
     }
 
     @Override
@@ -41,6 +45,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public orders createOrder(orders order) {
+        long l = System.currentTimeMillis();
+        order.setId(l);
         orderMapper.insert(order);
 
         return orderMapper.findById(order.getId());
@@ -70,5 +76,36 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderDetail> getOrderDetails(Long orderId) {
         return null;
+    }
+
+    @Override
+    public List<OrderDTO> getOrdersByUser(Long userId, String status) {
+        List<orders> ordersList;
+        if ("ALL".equals(status)) {
+            ordersList = orderMapper.findByUserId(userId);
+        } else {
+            ordersList = orderMapper.findByUserIdAndStatus(userId, status);
+        }
+        
+        // 转换为 DTO
+        return ordersList.stream().map(order -> {
+            OrderDTO dto = new OrderDTO();
+            dto.setId(order.getId());
+            dto.setUserId(order.getUserId());
+            dto.setStatus(order.getStatus());
+            dto.setTotalAmount(order.getTotalAmount());
+            dto.setCreateTime(order.getCreateTime());
+            dto.setUpdateTime(order.getUpdateTime());
+            
+            // 设置款式和系列信息
+            dto.setStyleId(order.getBoxStyleId());
+            dto.setStyleName(order.getStyleName());
+            dto.setStyleImageUrl(order.getStyleImageUrl());
+            dto.setSeriesId(order.getSeriesId());
+            dto.setSeriesName(order.getSeriesName());
+            dto.setSeriesDescription(order.getSeriesDescription());
+            
+            return dto;
+        }).collect(Collectors.toList());
     }
 }

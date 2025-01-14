@@ -1,5 +1,7 @@
 package com.mysterybox.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 import javax.persistence.*;
 import java.util.Date;
@@ -9,6 +11,7 @@ import java.util.Date;
 public class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
     
     @Column(name = "create_time")

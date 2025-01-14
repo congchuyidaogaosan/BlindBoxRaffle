@@ -15,12 +15,9 @@
     enable-flex
   >
     <view class="style-grid">
-      <!-- 所有款式列表 -->
       <view class="style-item"
         wx:for="{{styleList}}" 
         wx:key="id"
-        bindtap="onDraw"
-        data-id="{{item.id}}"
       >
         <image src="{{item.imageUrl}}" mode="aspectFill" />
         <view class="info">

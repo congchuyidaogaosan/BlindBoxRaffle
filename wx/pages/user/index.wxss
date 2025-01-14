@@ -13,6 +13,7 @@
   padding: 40rpx;
   margin-bottom: 20rpx;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: flex-start;
 }
@@ -21,15 +22,15 @@
   display: flex;
   align-items: center;
   width: 100%;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   padding: 0 20rpx;
 }
 
 .avatar {
-  width: 80rpx;
-  height: 80rpx;
-  border-radius: 50%;
-  border: 4rpx solid rgba(255,255,255,0.4);
+  width: 150rpx;
+  height: 150rpx;
+  /* border-radius: 50%; */
+  /* border: 4rpx solid rgba(255,255,255,0.4); */
 }
 
 .info {
@@ -39,6 +40,15 @@
   display: flex;
   align-items: center;
   /* justify-content: flex-end; */
+}
+.avatar-wrapper{
+  padding: 0;
+  margin: 0;
+  width: 150rpx;
+  height: 150rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .nickname {
@@ -52,6 +62,50 @@
   margin-left: 16rpx;
 }
 
+.nickname-input {
+  font-size: 36rpx;
+  color: #FFF;
+  font-weight: bold;
+  margin-left: 50rpx;
+}
+
+/* 钱包卡片样式 */
+.wallet-card {
+  width: 100%;
+  /* background: linear-gradient(135deg, #409EFF 0%, #36D1DC 100%); */
+  border-radius: 16rpx;
+  color: #fff;
+  padding: 30rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+
+.balance-info {
+display: flex;
+flex-direction: column;
+}
+
+.balance-info .label {
+font-size: 24rpx;
+opacity: 0.9;
+margin-bottom: 10rpx;
+}
+
+.balance-info .amount {
+font-size: 48rpx;
+font-weight: bold;
+}
+
+.recharge-btn {
+background: rgba(255, 255, 255, 0.2);
+color: #fff;
+border: 1rpx solid rgba(255, 255, 255, 0.5);
+font-size: 28rpx;
+padding: 12rpx 30rpx;
+border-radius: 30rpx;
+}
 /* 数据统计 */
 .stats {
   width: 100%;

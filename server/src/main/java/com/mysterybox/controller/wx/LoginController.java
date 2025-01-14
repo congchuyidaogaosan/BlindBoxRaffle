@@ -26,8 +26,9 @@ import org.springframework.web.client.RestTemplate;
 @RequestMapping("/api/WXLogin")
 public class LoginController {
 
-    private final String AppId = "wx958c331bb5b02d97";
-    private final String AppSecret = "d250907f3e38b48e1c0b78830a3f250d";
+    private final String AppId = "wxb38fa1462130b7fd";
+    private final String AppSecret = "e7965d960c3a161ce50bff28eaf42b15";
+
 
     @Autowired
     private JwtUtil jwtUtil;

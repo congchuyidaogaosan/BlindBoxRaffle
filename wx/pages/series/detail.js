@@ -1,4 +1,4 @@
-import { getSeriesById, getStylesBySeriesId } from '../../utils/api'
+import { getSeriesById, getStylesBySeriesId, drawMystery } from '../../utils/api'
 
 Page({
   data: {
@@ -25,13 +25,6 @@ Page({
         getStylesBySeriesId(this.data.seriesId)
       ])
       
-      console.log('获取到系列信息:', seriesRes)
-      console.log('获取到款式列表:', stylesRes)
-      
-      if (stylesRes.data && stylesRes.data.length > 0) {
-        console.log('第一个款式的数据:', stylesRes.data[0])
-      }
-      
       this.setData({
         seriesInfo: seriesRes.data,
         styleList: stylesRes.data || []
@@ -47,18 +40,58 @@ Page({
     }
   },
   
-  // 抽取神秘款式
-  onDrawMystery() {
-    wx.navigateTo({
-      url: `/pages/draw/index?seriesId=${this.data.seriesId}&type=mystery`
-    })
-  },
-  
-  // 抽取普通款式
-  onDraw(e) {
-    const { id } = e.currentTarget.dataset
-    wx.navigateTo({
-      url: `/pages/draw/index?seriesId=${this.data.seriesId}&styleId=${id}`
-    })
+  // 神秘抽奖
+  async onDrawMystery() {
+    try {
+      // 检查余额是否足够
+      const app = getApp()
+      const userBalance = app.globalData.userInfo.balance || 0
+      console.log(app.globalData.userInfo);
+      if (userBalance < this.data.seriesInfo.price) {
+        wx.showToast({
+          title: '余额不足，请先充值',
+          icon: 'none'
+        })
+        return
+      }
+
+      // 显示确认框
+      const { confirm } = await wx.showModal({
+        title: '确认抽奖',
+        content: `确定要花费 ¥${this.data.seriesInfo.price} 进行抽奖吗？`,
+        confirmText: '确定抽奖'
+      })
+      
+      if (!confirm) return
+
+      // 显示抽奖动画
+      wx.showLoading({
+        title: '抽奖中...',
+        mask: true
+      })
+
+      // 调用神秘抽奖接口
+      const res = await drawMystery({
+        seriesId: this.data.seriesId,
+        userId: app.globalData.userInfo.id
+      })
+
+      wx.hideLoading()
+
+      // 更新用户余额
+      app.globalData.userInfo.balance -= this.data.seriesInfo.price
+
+      // 跳转到抽奖结果页
+      wx.navigateTo({
+        url: `/pages/draw/result?orderId=${res.data.order.id}`
+      })
+
+    } catch (error) {
+      wx.hideLoading()
+      wx.showToast({
+        title: error.message || '抽奖失败',
+        icon: 'none'
+      })
+    }
   }
 }) 

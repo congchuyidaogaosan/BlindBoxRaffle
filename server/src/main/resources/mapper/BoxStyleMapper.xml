@@ -33,13 +33,12 @@
     </select>
     
     <select id="findBySeriesId" resultType="com.mysterybox.entity.BoxStyle">
-        SELECT 
-            bs.*,
-            bse.price as series_price,
-            bse.name as series_name,
-            bse.description as series_description
+        SELECT bs.*, 
+               bsr.name as series_name,
+               bsr.description as series_description,
+               bsr.price as series_price
         FROM box_style bs
-        LEFT JOIN box_series bse ON bs.series_id = bse.id
+        LEFT JOIN box_series bsr ON bs.series_id = bsr.id
         WHERE bs.series_id = #{seriesId}
         AND bs.is_deleted = 0
         ORDER BY bs.probability DESC
@@ -94,4 +93,10 @@
         ORDER BY sales_count DESC
         LIMIT 10
     </select>
+    
+    <update id="updateStock">
+        UPDATE box_style
+        SET stock = stock - 1
+        WHERE id = #{id} AND stock > 0
+    </update>
 </mapper> 
