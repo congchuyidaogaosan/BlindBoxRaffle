@@ -32,11 +32,11 @@
       <view class="order-content">
         <image 
           class="style-image" 
-          src="{{item.boxStyle.imageUrl}}" 
+          src="{{item.styleImageUrl}}" 
           mode="aspectFill"
         />
         <view class="style-info">
-          <text class="style-name">{{item.boxStyle.name}}</text>
+          <text class="style-name">{{item.styleName}}</text>
           <text class="style-price">¥{{item.totalAmount}}</text>
         </view>
       </view>

@@ -19,7 +19,6 @@ public class orders extends BaseEntity {
     private Long id;
 
     @Column(name = "user_id")
-
     private Long userId;
     
     @Column(name = "box_style_id")
