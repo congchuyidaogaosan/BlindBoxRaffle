@@ -1,6 +1,7 @@
 <view class="container">
+  <image class="bg" src="/images/logo.png" mode="scaleToFill"/>
   <view class="login-box">
-    <image class="logo" src="/images/logo.png" mode="aspectFit"/>
+    <image class="bg-image" src="/images/logo.png" mode="scaleToFill"/>
     <view class="title">欢迎使用神秘盒子</view>
     <view class="desc">请授权登录以使用完整功能</view>
     

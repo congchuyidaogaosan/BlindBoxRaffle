@@ -5,6 +5,7 @@ import com.mysterybox.dto.LoginRequest;
 import com.mysterybox.dto.LoginResponse;
 import com.mysterybox.entity.User;
 import com.mysterybox.mapper.UserMapper;
+import com.mysterybox.mapper.OrderMapper;
 import com.mysterybox.service.UserService;
 import com.mysterybox.utils.JwtUtil;
 import com.mysterybox.utils.WxUtil;
@@ -20,6 +21,8 @@ import java.math.BigDecimal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.Authentication;
+import java.util.Map;
+import java.util.HashMap;
 
 @Service
 @Transactional
@@ -36,6 +39,9 @@ public class UserServiceImpl  extends ServiceImpl<UserMapper, User> implements U
 
     @Autowired
     private JwtUtil jwtUtil;
+
+    @Autowired
+    private OrderMapper orderMapper;
 
     @Override
     public List<User> getAllUsers() {
@@ -132,5 +138,20 @@ public class UserServiceImpl  extends ServiceImpl<UserMapper, User> implements U
     @Override
     public int newsave(User kehuEntity) {
         return userMapper.insert(kehuEntity);
+    }
+
+    @Override
+    public Map<String, Integer> getUserStats(Long userId) {
+        Map<String, Integer> stats = new HashMap<>();
+        
+        // 获取抽盒次数 (完成状态的订单数)
+        Integer drawCount = orderMapper.countByUserIdAndStatus(userId, "COMPLETED");
+        stats.put("drawCount", drawCount);
+        
+        // 获取款式数 (不同款式的数量)
+        Integer boxCount = orderMapper.countDistinctStylesByUserId(userId);
+        stats.put("boxCount", boxCount);
+        
+        return stats;
     }
 }

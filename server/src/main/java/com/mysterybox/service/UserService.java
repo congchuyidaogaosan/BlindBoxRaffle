@@ -6,6 +6,7 @@ import com.mysterybox.dto.LoginResponse;
 import com.mysterybox.entity.User;
 import java.util.List;
 import java.math.BigDecimal;
+import java.util.Map;
 
 public interface UserService extends IService<User> {
     List<User> getAllUsers();
@@ -22,4 +23,11 @@ public interface UserService extends IService<User> {
     int newsave(User kehuEntity);
     
     void updateBalance(Long userId, BigDecimal newBalance);
+
+    /**
+     * 获取用户统计数据
+     * @param userId 用户ID
+     * @return 包含抽盒次数和获得款式数的统计数据
+     */
+    Map<String, Integer> getUserStats(Long userId);
 } 

@@ -122,5 +122,14 @@ export function drawMystery(data) {
   })
 }
 
+// 获取用户统计数据
+export function getUserStats(userId) {
+  return request({
+    url: '/user/stats',
+    method: 'GET',
+    data: { userId }
+  })
+}
+
 
   

@@ -1,4 +1,4 @@
-import { recharge, getWalletBalance } from '../../utils/api'
+import { recharge, getWalletBalance, getUserStats } from '../../utils/api'
 
 Page({
   data: {
@@ -7,8 +7,7 @@ Page({
     balance: 0,
     stats: {
       drawCount: 0,
-      boxCount: 0,
-      reviewCount: 0
+      boxCount: 0
     }
   },
 
@@ -17,6 +16,7 @@ Page({
     const userInfo = getApp().globalData.userInfo
     this.setData({ userInfo })
     this.fetchWalletBalance()
+    this.fetchUserStats()
   },
   
   
@@ -120,5 +120,17 @@ Page({
   navigateTo(e) {
     const { url } = e.currentTarget.dataset
     wx.navigateTo({ url })
+  },
+
+  // 获取用户统计信息
+  async fetchUserStats() {
+    const app = getApp()
+    const userId = app.globalData.userInfo.id
+    const res = await getUserStats(userId)
+    this.setData({
+      stats: res.data || {}
+    })
+
   }
+  
 }) 

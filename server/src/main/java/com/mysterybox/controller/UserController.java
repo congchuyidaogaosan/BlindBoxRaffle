@@ -129,4 +129,14 @@ public class UserController {
             return Result.error("充值失败: " + e.getMessage());
         }
     }
+
+    @GetMapping("/stats")
+    public Result<Map<String, Integer>> getUserStats(@RequestParam Long userId) {
+        try {
+            Map<String, Integer> stats = userService.getUserStats(userId);
+            return Result.success(stats);
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
 } 

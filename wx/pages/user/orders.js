@@ -9,8 +9,8 @@ Page({
   data: {
     orderList: [],
     loading: false,
-    currentTab: 0, // 0:全部 1:待付款 2:已完成 3:已取消
-    tabs: ['全部', '待付款', '已完成', '已取消']
+    // currentTab: 0, // 0:全部 1:待付款 2:已完成 3:已取消
+    // tabs: ['全部', '已完成', '已取消']
   },
 
   /**
@@ -81,7 +81,7 @@ Page({
     this.setData({ loading: true })
     try {
       // 根据当前标签获取对应状态的订单
-      const status = ['ALL', 'PENDING', 'COMPLETED', 'CANCELLED'][this.data.currentTab]
+      const status = 'ALL'
       //获取用户信息 getApp().globalData.userInfo
       const userInfo = getApp().globalData.userInfo
 

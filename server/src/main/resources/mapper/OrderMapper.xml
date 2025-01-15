@@ -71,4 +71,18 @@
             update_time = NOW()
         WHERE id = #{id}
     </update>
+
+    <select id="countByUserIdAndStatus" resultType="int">
+        SELECT COUNT(*)
+        FROM orders
+        WHERE user_id = #{userId}
+        AND status = #{status}
+    </select>
+
+    <select id="countDistinctStylesByUserId" resultType="int">
+        SELECT COUNT(DISTINCT box_style_id)
+        FROM orders
+        WHERE user_id = #{userId}
+        AND status = 'COMPLETED'
+    </select>
 </mapper> 
