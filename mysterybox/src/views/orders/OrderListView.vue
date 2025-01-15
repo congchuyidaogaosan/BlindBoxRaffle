@@ -10,20 +10,9 @@
         v-loading="loading"
       >
         <el-table-column
-          label="用户信息"
-          width="200">
-          <template slot-scope="scope">
-            <div class="user-info">
-              <el-avatar 
-                :size="40" 
-                :src="scope.row.userAvatarUrl"
-              />
-              <div class="user-detail">
-                <div class="nickname">{{ scope.row.userNickname || '未知用户' }}</div>
-                <div class="user-id text-gray">ID: {{ scope.row.userId }}</div>
-              </div>
-            </div>
-          </template>
+          label="订单号"
+          prop="id"
+          width="180">
         </el-table-column>
 
         <el-table-column
@@ -32,13 +21,13 @@
           <template slot-scope="scope">
             <div class="style-info">
               <el-image 
-                :src="scope.row.boxStyleImageUrl" 
-                :preview-src-list="[scope.row.boxStyleImageUrl]"
+                :src="scope.row.styleImageUrl" 
+                :preview-src-list="[scope.row.styleImageUrl]"
                 style="width: 50px; height: 50px; border-radius: 4px;"
                 fit="cover"
               />
               <div class="style-detail">
-                <div class="style-name">{{ scope.row.boxStyleName }}</div>
+                <div class="style-name">{{ scope.row.styleName }}</div>
                 <div class="series-name text-gray">{{ scope.row.seriesName }}</div>
               </div>
             </div>
@@ -55,8 +44,8 @@
 
         <el-table-column
           label="状态"
-          width="120">
-          <template #default="scope">
+          width="100">
+          <template slot-scope="scope">
             <el-tag :type="getStatusType(scope.row.status)">
               {{ getStatusText(scope.row.status) }}
             </el-tag>
@@ -66,92 +55,38 @@
         <el-table-column
           label="创建时间"
           width="180">
-          <template #default="scope">
-            {{ formatDate(scope.row.createTime) }}
+          <template slot-scope="scope">
+            {{ (scope.row.createTime) }}
           </template>
         </el-table-column>
 
         <el-table-column
           label="操作"
           width="120">
-          <template #default="scope">
+          <template slot-scope="scope">
             <el-button
               size="small"
-              type="primary"
-              @click="handleDetail(scope.row)">详情</el-button>
+              type="danger"
+              @click="handleDelete(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
     </el-card>
-
-    <!-- 订单详情弹窗 -->
-    <el-dialog title="订单详情" :visible.sync="dialogVisible">
-      <div v-if="currentOrder">
-        <!-- 用户信息 -->
-        <div class="detail-section">
-          <h4>用户信息</h4>
-          <div class="user-info">
-            <el-avatar 
-              :size="50" 
-              :src="currentOrder.userAvatarUrl"
-            />
-            <div class="user-detail">
-              <div class="nickname">{{ currentOrder.userNickname || '未知用户' }}</div>
-              <div class="user-id text-gray">ID: {{ currentOrder.userId }}</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 订单信息 -->
-        <div class="order-info">
-          <h4>订单信息</h4>
-          <p>订单号：{{ currentOrder.id }}</p>
-          <p>创建时间：{{ formatDate(currentOrder.createTime) }}</p>
-          <p>订单金额：¥ {{ currentOrder.totalAmount }}</p>
-          <p>订单状态：
-            <el-tag :type="getStatusType(currentOrder.status)">
-              {{ getStatusText(currentOrder.status) }}
-            </el-tag>
-          </p>
-        </div>
-
-        <!-- 款式信息 -->
-        <div class="style-section">
-          <h4>抽中款式</h4>
-          <div class="style-info detail-style">
-            <el-image 
-              :src="currentOrder.boxStyleImageUrl" 
-              :preview-src-list="[currentOrder.boxStyleImageUrl]"
-              style="width: 80px; height: 80px; border-radius: 4px;"
-            />
-            <div class="style-detail">
-              <div class="style-name">{{ currentOrder.boxStyleName }}</div>
-              <div class="series-name">系列：{{ currentOrder.seriesName }}</div>
-              <div class="series-desc text-gray">{{ currentOrder.seriesDescription }}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getOrders, getOrderDetails } from '@/api/order'
-import { formatDate } from '@/utils/date'
+import { getOrders, deleteOrder } from '@/api/order'
 
 export default {
   name: 'OrdersView',
   data() {
     return {
       loading: false,
-      orders: [],
-      dialogVisible: false,
-      currentOrder: null
+      orders: []
     }
   },
   methods: {
-    formatDate,
     getStatusType(status) {
       const statusMap = {
         'PENDING': 'warning',
@@ -183,9 +118,24 @@ export default {
         this.loading = false
       }
     },
-    async handleDetail(order) {
-      this.currentOrder = order
-      this.dialogVisible = true
+    async handleDelete(order) {
+      try {
+        await this.$confirm('确认删除该订单?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+        
+        const res = await deleteOrder(order.id)
+        if (res.code === 200) {
+          this.$message.success('删除成功')
+          this.fetchOrders() // 重新加载列表
+        }
+      } catch (error) {
+        if (error !== 'cancel') {
+          this.$message.error('删除失败')
+        }
+      }
     }
   },
   created() {
@@ -195,38 +145,6 @@ export default {
 </script>
 
 <style scoped>
-.order-info {
-  margin-bottom: 20px;
-}
-
-.order-info p {
-  margin: 10px 0;
-}
-
-.item-list {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-}
-
-.item {
-  text-align: center;
-}
-
-.item img {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-}
-
-.item-info {
-  margin-top: 10px;
-}
-
-.price {
-  color: #F56C6C;
-}
-
 .user-info,
 .style-info {
   display: flex;
@@ -258,27 +176,5 @@ export default {
 .amount {
   font-weight: 500;
   color: #f56c6c;
-}
-
-.detail-section {
-  margin-bottom: 24px;
-}
-
-h4 {
-  margin-bottom: 16px;
-  font-weight: 500;
-  color: #303133;
-}
-
-.detail-style {
-  padding: 16px;
-  background-color: #f5f7fa;
-  border-radius: 8px;
-}
-
-.series-desc {
-  margin-top: 8px;
-  font-size: 12px;
-  line-height: 1.4;
 }
 </style> 

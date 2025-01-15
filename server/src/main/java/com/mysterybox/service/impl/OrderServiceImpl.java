@@ -1,9 +1,12 @@
 package com.mysterybox.service.impl;
 
-
 import com.mysterybox.entity.OrderDetail;
 import com.mysterybox.entity.orders;
+import com.mysterybox.entity.BoxStyle;
+import com.mysterybox.entity.BoxSeries;
 import com.mysterybox.mapper.OrderMapper;
+import com.mysterybox.mapper.BoxStyleMapper;
+import com.mysterybox.mapper.BoxSeriesMapper;
 import com.mysterybox.service.OrderService;
 import com.mysterybox.dto.OrderDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private OrderMapper orderMapper;
+
+    @Autowired
+    private BoxStyleMapper boxStyleMapper;
+
+    @Autowired
+    private BoxSeriesMapper boxSeriesMapper;
 
     @Override
     public List<orders> getAllOrders() {
@@ -114,7 +123,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderDTO> getAllOrdersWithDetails() {
-        List<orders> ordersList = orderMapper.findAllWithDetails();
+        List<orders> ordersList = orderMapper.selectList(null);
         
         // 转换为 DTO
         return ordersList.stream().map(order -> {
@@ -128,12 +137,20 @@ public class OrderServiceImpl implements OrderService {
             
             // 设置款式和系列信息
             dto.setStyleId(order.getBoxStyleId());
-            dto.setStyleName(order.getStyleName());
-            dto.setStyleImageUrl(order.getStyleImageUrl());
-            dto.setSeriesId(order.getSeriesId());
-            dto.setSeriesName(order.getSeriesName());
-            dto.setSeriesDescription(order.getSeriesDescription());
-            
+            // 通过 box_style_id 查询款式信息
+            BoxStyle boxStyle = boxStyleMapper.selectById(order.getBoxStyleId());
+            if (boxStyle != null) {
+                dto.setStyleName(boxStyle.getName());
+                dto.setStyleImageUrl(boxStyle.getImageUrl());
+                
+                // 通过 series_id 查询系列信息
+                BoxSeries series = boxSeriesMapper.selectById(boxStyle.getSeriesId());
+                if (series != null) {
+                    dto.setSeriesId(series.getId());
+                    dto.setSeriesName(series.getName());
+                    dto.setSeriesDescription(series.getDescription());
+                }
+            }
             
             return dto;
         }).collect(Collectors.toList());
