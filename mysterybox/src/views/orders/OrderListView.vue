@@ -12,8 +12,8 @@
         <el-table-column
           label="订单号"
           prop="id"
-          width="180">
-        </el-table-column>
+          width="180"
+        />
 
         <el-table-column
           label="抽中款式"
@@ -54,11 +54,9 @@
 
         <el-table-column
           label="创建时间"
-          width="180">
-          <template slot-scope="scope">
-            {{ (scope.row.createTime) }}
-          </template>
-        </el-table-column>
+          width="180"
+          prop="createTime"
+        />
 
         <el-table-column
           label="操作"
@@ -89,19 +87,19 @@ export default {
   methods: {
     getStatusType(status) {
       const statusMap = {
-        'PENDING': 'warning',
-        'COMPLETED': 'success',
-        'CANCELLED': 'info',
-        'FAILED': 'danger'
+        PENDING: 'warning',
+        COMPLETED: 'success',
+        CANCELLED: 'info',
+        FAILED: 'danger'
       }
       return statusMap[status] || 'info'
     },
     getStatusText(status) {
       const statusMap = {
-        'PENDING': '待支付',
-        'COMPLETED': '已完成',
-        'CANCELLED': '已取消',
-        'FAILED': '失败'
+        PENDING: '待支付',
+        COMPLETED: '已完成',
+        CANCELLED: '已取消',
+        FAILED: '失败'
       }
       return statusMap[status] || status
     },
@@ -129,7 +127,7 @@ export default {
         const res = await deleteOrder(order.id)
         if (res.code === 200) {
           this.$message.success('删除成功')
-          this.fetchOrders() // 重新加载列表
+          this.fetchOrders()
         }
       } catch (error) {
         if (error !== 'cancel') {
@@ -145,26 +143,22 @@ export default {
 </script>
 
 <style scoped>
-.user-info,
 .style-info {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-.user-detail,
 .style-detail {
   display: flex;
   flex-direction: column;
 }
 
-.nickname,
 .style-name {
   font-size: 14px;
   font-weight: 500;
 }
 
-.user-id,
 .series-name {
   font-size: 12px;
 }

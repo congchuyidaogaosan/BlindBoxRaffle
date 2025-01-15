@@ -9,6 +9,7 @@ import com.mysterybox.entity.BoxSeries;
 import com.sun.org.glassfish.external.statistics.Statistic;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -37,4 +38,18 @@ public interface StatisticsMapper {
     List<DrawPreference> getDrawPreferences();
     
     List<PopularStyle> getPopularStyles();
+
+    @Select("SELECT COUNT(create_time) FROM orders WHERE create_time LIKE #{date}")
+    Double gettodaysum(String date);
+@Select("SELECT sum(total_amount) FROM orders WHERE create_time LIKE #{date}")
+            Double gettoorders(String date);
+@Select("SELECT COUNT(create_time) FROM `user` WHERE create_time LIKE #{date}")
+    Double getusers(String date);
+
+
+
+
+
+
+
 } 

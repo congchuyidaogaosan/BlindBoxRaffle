@@ -19,6 +19,14 @@ public class StatisticsController {
     @Autowired
     private StatisticsService statisticsService;
 
+
+    @GetMapping("/newget")
+    public Result newget(){
+
+        HashMap<String, String> getnewsession = statisticsService.getnewsession();
+        return Result.success(getnewsession);
+
+    }
     @GetMapping("/overview")
     public Result<Map<String, Object>> getOverview(
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime since) {

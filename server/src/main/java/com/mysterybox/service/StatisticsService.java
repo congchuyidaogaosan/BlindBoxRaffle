@@ -5,6 +5,7 @@ import com.mysterybox.dto.PopularStyle;
 import com.mysterybox.dto.SalesTrend;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 
 public interface StatisticsService {
@@ -30,4 +31,6 @@ public interface StatisticsService {
     List<DrawPreference> getDrawPreferences();
     
     List<PopularStyle> getPopularStyles();
-} 
+
+    public HashMap<String,String>  getnewsession();
+}

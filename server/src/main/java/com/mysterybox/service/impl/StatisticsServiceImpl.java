@@ -8,7 +8,10 @@ import com.mysterybox.service.StatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -71,4 +74,24 @@ public class StatisticsServiceImpl implements StatisticsService {
     public List<PopularStyle> getPopularStyles() {
         return statisticsMapper.getPopularStyles();
     }
+
+    public HashMap<String,String> getnewsession(){
+        HashMap<String, String> stringStringHashMap = new HashMap<>();
+        long currentTimeMillis = System.currentTimeMillis();
+        SimpleDateFormat formatter =new SimpleDateFormat("yyyy-MM-dd");
+        Date date =new Date(currentTimeMillis);
+        System.out.println(formatter.format(date));
+
+
+        Double gettodaysum = statisticsMapper.gettodaysum("%"+formatter.format(date)+"%");
+
+        Double gettoorders = statisticsMapper.gettoorders("%"+formatter.format(date)+"%");
+
+        Double getusers = statisticsMapper.getusers("%"+formatter.format(date)+"%");
+        stringStringHashMap.put("gettodaysum",gettodaysum+"");
+        stringStringHashMap.put("gettoorders",gettoorders+"");
+        stringStringHashMap.put("getusers",getusers+"");
+        return stringStringHashMap;
+    }
+
 } 

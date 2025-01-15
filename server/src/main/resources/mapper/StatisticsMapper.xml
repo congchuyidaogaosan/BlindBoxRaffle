@@ -2,94 +2,164 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mysterybox.mapper.StatisticsMapper">
     
+    <!-- 统计订单数量 -->
     <select id="countOrders" resultType="Long">
         SELECT COUNT(*) 
         FROM orders 
-        WHERE create_time >= #{since}
+        WHERE status = 'COMPLETED'
+        <if test="since != null">
+            AND create_time >= #{since}
+        </if>
     </select>
     
+    <!-- 统计销售额 -->
     <select id="countSales" resultType="Double">
-        SELECT COALESCE(SUM(total_amount), 0) 
-        FROM orders 
-        WHERE create_time >= #{since}
-        AND status = 'COMPLETED'
+        SELECT COALESCE(SUM(total_amount), 0)
+        FROM orders
+        WHERE status = 'COMPLETED'
+        <if test="since != null">
+            AND create_time >= #{since}
+        </if>
     </select>
     
-    <select id="countNewUsers" resultType="Int">
+    <!-- 统计新用户数 -->
+    <select id="countNewUsers" resultType="Integer">
         SELECT COUNT(*) 
         FROM user
         WHERE create_time >= #{since}
     </select>
     
+    <!-- 统计抽奖次数 -->
     <select id="countDraws" resultType="Long">
         SELECT COUNT(*) 
-        FROM order_detail
-        WHERE create_time >= #{since}
+        FROM orders
+        WHERE status = 'COMPLETED'
+        <if test="since != null">
+            AND create_time >= #{since}
+        </if>
     </select>
     
+    <!-- 获取订单环比变化 -->
     <select id="getOrderChange" resultType="Double">
-        SELECT ((today.count - yesterday.count) / yesterday.count * 100)
-        FROM 
-        (SELECT COUNT(*) as count FROM orders WHERE DATE(create_time) = CURDATE()) today,
-        (SELECT COUNT(*) as count FROM orders WHERE DATE(create_time) = DATE_SUB(CURDATE(), INTERVAL 1 DAY)) yesterday
+<!--        SELECT COALESCE(-->
+<!--            ((curr.count - prev.count) * 100.0 / NULLIF(prev.count, 0)), -->
+<!--            0-->
+<!--        )-->
+<!--        FROM (-->
+<!--            SELECT COUNT(*) as count -->
+<!--            FROM orders -->
+<!--            WHERE status = 'COMPLETED'-->
+<!--            AND create_time >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)-->
+<!--            AND create_time < CURDATE()-->
+<!--        ) curr,-->
+<!--        (-->
+<!--            SELECT COUNT(*) as count -->
+<!--            FROM orders -->
+<!--            WHERE status = 'COMPLETED'-->
+<!--            AND create_time >= DATE_SUB(CURDATE(), INTERVAL 2 MONTH)-->
+<!--            AND create_time < DATE_SUB(CURDATE(), INTERVAL 1 MONTH)-->
+<!--        ) prev-->
     </select>
     
+    <!-- 获取销售额环比变化 -->
     <select id="getSalesChange" resultType="Double">
-        SELECT ((today.amount - yesterday.amount) / yesterday.amount * 100)
-        FROM 
-        (SELECT COALESCE(SUM(total_amount), 0) as amount FROM orders WHERE DATE(create_time) = CURDATE() AND status = 'COMPLETED') today,
-        (SELECT COALESCE(SUM(total_amount), 0) as amount FROM orders WHERE DATE(create_time) = DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND status = 'COMPLETED') yesterday
+<!--        SELECT COALESCE(-->
+<!--            ((curr.amount - prev.amount) * 100.0 / NULLIF(prev.amount, 0)),-->
+<!--            0-->
+<!--        )-->
+<!--        FROM (-->
+<!--            SELECT COALESCE(SUM(total_amount), 0) as amount -->
+<!--            FROM orders -->
+<!--            WHERE status = 'COMPLETED'-->
+<!--            AND create_time >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)-->
+<!--            AND create_time < CURDATE()-->
+<!--        ) curr,-->
+<!--        (-->
+<!--            SELECT COALESCE(SUM(total_amount), 0) as amount -->
+<!--            FROM orders -->
+<!--            WHERE status = 'COMPLETED'-->
+<!--            AND create_time >= DATE_SUB(CURDATE(), INTERVAL 2 MONTH)-->
+<!--            AND create_time < DATE_SUB(CURDATE(), INTERVAL 1 MONTH)-->
+<!--        ) prev-->
     </select>
     
+    <!-- 获取用户增长环比变化 -->
     <select id="getUserChange" resultType="Double">
-        SELECT ((today.count - yesterday.count) / yesterday.count * 100)
-        FROM 
-        (SELECT COUNT(*) as count FROM user WHERE DATE(create_time) = CURDATE()) today,
-        (SELECT COUNT(*) as count FROM user WHERE DATE(create_time) = DATE_SUB(CURDATE(), INTERVAL 1 DAY)) yesterday
+<!--        SELECT COALESCE(-->
+<!--            ((curr.count - prev.count) * 100.0 / NULLIF(prev.count, 0)),-->
+<!--            0-->
+<!--        )-->
+<!--        FROM (-->
+<!--            SELECT COUNT(*) as count -->
+<!--            FROM user -->
+<!--            WHERE create_time >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)-->
+<!--            AND create_time < CURDATE()-->
+<!--        ) curr,-->
+<!--        (-->
+<!--            SELECT COUNT(*) as count -->
+<!--            FROM user -->
+<!--            WHERE create_time >= DATE_SUB(CURDATE(), INTERVAL 2 MONTH)-->
+<!--            AND create_time < DATE_SUB(CURDATE(), INTERVAL 1 MONTH)-->
+<!--        ) prev-->
     </select>
     
+    <!-- 获取抽奖环比变化 -->
     <select id="getDrawChange" resultType="Double">
-        SELECT ((today.count - yesterday.count) / yesterday.count * 100)
-        FROM 
-        (SELECT COUNT(*) as count FROM order_detail WHERE DATE(create_time) = CURDATE()) today,
-        (SELECT COUNT(*) as count FROM order_detail WHERE DATE(create_time) = DATE_SUB(CURDATE(), INTERVAL 1 DAY)) yesterday
+<!--        SELECT COALESCE(-->
+<!--            ((curr.count - prev.count) * 100.0 / NULLIF(prev.count, 0)),-->
+<!--            0-->
+<!--        )-->
+<!--        FROM (-->
+<!--            SELECT COUNT(*) as count -->
+<!--            FROM orders -->
+<!--            WHERE status = 'COMPLETED'-->
+<!--            AND create_time >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)-->
+<!--            AND create_time < CURDATE()-->
+<!--        ) curr,-->
+<!--        (-->
+<!--            SELECT COUNT(*) as count -->
+<!--            FROM orders -->
+<!--            WHERE status = 'COMPLETED'-->
+<!--            AND create_time >= DATE_SUB(CURDATE(), INTERVAL 2 MONTH)-->
+<!--            AND create_time < DATE_SUB(CURDATE(), INTERVAL 1 MONTH)-->
+<!--        ) prev-->
     </select>
     
+    <!-- 获取销售趋势 -->
     <select id="getSalesTrend" resultType="com.mysterybox.dto.SalesTrend">
         SELECT 
             DATE(create_time) as date,
-            SUM(total_amount) as amount
+            COALESCE(SUM(total_amount), 0) as amount
         FROM orders
-        WHERE create_time >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
-        AND status = 'COMPLETED'
+        WHERE status = 'COMPLETED'
+        AND create_time >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
         GROUP BY DATE(create_time)
-        ORDER BY date
+        ORDER BY date ASC
     </select>
-
-
+    
+    <!-- 获取抽奖偏好 -->
     <select id="getDrawPreferences" resultType="com.mysterybox.dto.DrawPreference">
         SELECT 
             s.name as seriesName,
             COUNT(*) as drawCount,
-            COUNT(*) * 100.0 / (SELECT COUNT(*) FROM order_detail) as percentage
-        FROM order_detail od
-        JOIN box_style bs ON od.box_style_id = bs.id
+            COUNT(*) * 100.0 / NULLIF((SELECT COUNT(*) FROM orders WHERE status = 'COMPLETED'), 0) as percentage
+        FROM orders o
+        JOIN box_style bs ON o.box_style_id = bs.id
         JOIN box_series s ON bs.series_id = s.id
+        WHERE o.status = 'COMPLETED'
         GROUP BY s.id, s.name
         ORDER BY drawCount DESC
         LIMIT 10
     </select>
-
-<!--    获取系列销量数据-->
+    
+    <!-- 获取热门款式 -->
     <select id="getPopularStyles" resultType="com.mysterybox.dto.PopularStyle">
         SELECT 
             bs.name,
-            SUM(od.quantity) as sales,
-            SUM(od.price * od.quantity) as amount
-        FROM 
-            order_detail od
-        JOIN box_style bs ON od.box_style_id = bs.id
-        JOIN orders o ON od.order_id = o.id
+            COUNT(*) as sales,
+            COUNT(*) * 100.0 / NULLIF((SELECT COUNT(*) FROM orders WHERE status = 'COMPLETED'), 0) as percentage
+        FROM orders o
+        JOIN box_style bs ON o.box_style_id = bs.id
         WHERE o.status = 'COMPLETED'
         GROUP BY bs.id, bs.name
         ORDER BY sales DESC
