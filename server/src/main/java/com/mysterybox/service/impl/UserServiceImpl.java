@@ -45,7 +45,7 @@ public class UserServiceImpl  extends ServiceImpl<UserMapper, User> implements U
 
     @Override
     public List<User> getAllUsers() {
-        return userMapper.selectList(null);
+        return userMapper.findAll();
     }
 
     @Override
@@ -87,8 +87,20 @@ public class UserServiceImpl  extends ServiceImpl<UserMapper, User> implements U
     }
 
     @Override
+    @Transactional
     public void deleteUser(Long id) {
-        userMapper.deleteById(id);
+        User user = getUserById(id);
+        if (user == null) {
+            throw new RuntimeException("用户不存在");
+        }
+        
+        // 检查是否是管理员
+        if ("ADMIN".equals(user.getRole())) {
+            throw new RuntimeException("不能删除管理员用户");
+        }
+        
+        // 使用 status = -1 表示删除
+        userMapper.logicDelete(id);
     }
 
     @Override
@@ -153,5 +165,12 @@ public class UserServiceImpl  extends ServiceImpl<UserMapper, User> implements U
         stats.put("boxCount", boxCount);
         
         return stats;
+    }
+
+    @Override
+    public Long countActiveUsers() {
+        return lambdaQuery()
+            .ne(User::getStatus, -1)
+            .count();
     }
 }

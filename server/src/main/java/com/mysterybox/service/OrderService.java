@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface OrderService {
     List<orders> getAllOrders();
+    List<OrderDTO> getAllOrdersWithDetails();
     orders getOrderById(Long id);
     List<orders> getUserOrders(Long userId);
     List<orders> getOrdersByTimeRange(LocalDateTime startTime, LocalDateTime endTime);

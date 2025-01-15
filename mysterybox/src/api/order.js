@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function getOrders() {
   return request({
-    url: '/api/orders',
+    url: '/api/orders/list',
     method: 'get'
   })
 }
@@ -20,5 +20,12 @@ export function updateOrder(id, data) {
     url: `/api/orders/${id}`,
     method: 'put',
     data
+  })
+}
+
+export function deleteOrder(orderId) {
+  return request({
+    url: `/api/orders/delete/${orderId}`,
+    method: 'post'
   })
 } 

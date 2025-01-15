@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,6 +25,8 @@ public class OrderServiceImpl implements OrderService {
         List<orders> orders = orderMapper.selectList(null);
         return orders;
     }
+
+
 
     @Override
     public orders getOrderById(Long id) {
@@ -104,6 +107,33 @@ public class OrderServiceImpl implements OrderService {
             dto.setSeriesId(order.getSeriesId());
             dto.setSeriesName(order.getSeriesName());
             dto.setSeriesDescription(order.getSeriesDescription());
+            
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OrderDTO> getAllOrdersWithDetails() {
+        List<orders> ordersList = orderMapper.findAllWithDetails();
+        
+        // 转换为 DTO
+        return ordersList.stream().map(order -> {
+            OrderDTO dto = new OrderDTO();
+            dto.setId(order.getId());
+            dto.setUserId(order.getUserId());
+            dto.setStatus(order.getStatus());
+            dto.setTotalAmount(order.getTotalAmount());
+            dto.setCreateTime(order.getCreateTime());
+            dto.setUpdateTime(order.getUpdateTime());
+            
+            // 设置款式和系列信息
+            dto.setStyleId(order.getBoxStyleId());
+            dto.setStyleName(order.getStyleName());
+            dto.setStyleImageUrl(order.getStyleImageUrl());
+            dto.setSeriesId(order.getSeriesId());
+            dto.setSeriesName(order.getSeriesName());
+            dto.setSeriesDescription(order.getSeriesDescription());
+            
             
             return dto;
         }).collect(Collectors.toList());

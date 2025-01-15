@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -137,6 +138,32 @@ public class UserController {
             return Result.success(stats);
         } catch (Exception e) {
             return Result.error(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有用户列表
+     */
+    @GetMapping("/list")
+    public Result<List<User>> getUsers() {
+        try {
+            List<User> users = userService.getAllUsers();
+            return Result.success(users);
+        } catch (Exception e) {
+            return Result.error("获取用户列表失败: " + e.getMessage());
+        }
+    }
+
+    /**
+     * 逻辑删除用户
+     */
+    @PostMapping("/delete/{id}")
+    public Result<String> deleteUser(@PathVariable Long id) {
+        try {
+            userService.deleteUser(id);
+            return Result.success("删除用户成功");
+        } catch (Exception e) {
+            return Result.error("删除用户失败: " + e.getMessage());
         }
     }
 } 

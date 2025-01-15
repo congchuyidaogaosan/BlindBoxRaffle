@@ -29,4 +29,20 @@ export function updateProfile(data) {
     method: 'put',
     data
   })
+}
+
+// 获取用户列表
+export function getUsers() {
+  return request({
+    url: '/api/user/list',
+    method: 'get'
+  })
+}
+
+// 逻辑删除用户
+export function deleteUser(userId) {
+  return request({
+    url: `/api/user/delete/${userId}`,
+    method: 'post'
+  })
 } 

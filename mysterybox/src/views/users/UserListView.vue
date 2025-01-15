@@ -1,112 +1,156 @@
 <template>
   <div class="user-list">
-    <el-card>
-      <div slot="header">
-        <el-form :inline="true" :model="searchForm">
-          <el-form-item label="用户名">
-            <el-input v-model="searchForm.username" placeholder="请输入用户名" clearable />
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="handleSearch">查询</el-button>
-          </el-form-item>
-        </el-form>
-      </div>
-      <el-table :data="userList" v-loading="loading">
-        <el-table-column prop="id" label="ID" width="80" />
-        <el-table-column prop="username" label="用户名" />
-        <el-table-column prop="nickname" label="昵称" />
-        <el-table-column prop="balance" label="余额" width="120">
-          <template slot-scope="scope">
-            ¥{{ scope.row.balance }}
-          </template>
-        </el-table-column>
-        <el-table-column prop="status" label="状态" width="100">
-          <template slot-scope="scope">
-            <el-tag :type="scope.row.status === 1 ? 'success' : 'danger'">
-              {{ scope.row.status === 1 ? '正常' : '禁用' }}
-            </el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column prop="createTime" label="注册时间" width="180" />
-        <el-table-column label="操作" width="150">
-          <template slot-scope="scope">
-            <el-button type="text" @click="handleEdit(scope.row)">编辑</el-button>
-            <el-button 
-              type="text" 
-              :type="scope.row.status === 1 ? 'danger' : 'primary'"
-              @click="handleToggleStatus(scope.row)"
-            >
-              {{ scope.row.status === 1 ? '禁用' : '启用' }}
-            </el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <div class="pagination">
-        <el-pagination
-          :current-page="page"
-          :page-size="pageSize"
-          :total="total"
-          layout="total, prev, pager, next"
-          @current-change="handlePageChange"
-        />
-      </div>
-    </el-card>
+    <el-table :data="users" style="width: 100%">
+      <el-table-column label="用户信息" width="250">
+        <template #default="scope">
+          <div class="user-info">
+            <el-avatar 
+              :size="40" 
+              :src="scope.row.avatarUrl"
+            />
+            <div class="user-detail">
+              <div class="nickname">{{ scope.row.nickname }}</div>
+              <div class="openid text-gray">{{ scope.row.openId }}</div>
+            </div>
+          </div>
+        </template>
+      </el-table-column>
+
+      <el-table-column prop="balance" label="余额" width="120">
+        <template #default="scope">
+          ¥{{ scope.row.balance }}
+        </template>
+      </el-table-column>
+
+      <el-table-column prop="role" label="角色" width="120">
+        <template #default="scope">
+          <el-tag :type="getRoleType(scope.row.role)">
+            {{ getRoleText(scope.row.role) }}
+          </el-tag>
+        </template>
+      </el-table-column>
+
+      <el-table-column prop="createTime" label="注册时间" width="180">
+        <template #default="scope">
+          {{ formatDate(scope.row.createTime) }}
+        </template>
+      </el-table-column>
+
+      <el-table-column label="操作" width="150">
+        <template #default="scope">
+          <el-button 
+            size="small"
+            type="danger"
+            @click="handleDelete(scope.row)"
+          >
+            删除
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
   </div>
 </template>
 
 <script>
+import { getUsers, deleteUser } from '@/api/user'
+import { formatDate } from '@/utils/date'
+
 export default {
-  name: 'UserListView',
+  name: 'UserList',
   data() {
     return {
-      loading: false,
-      searchForm: {
-        username: ''
-      },
-      userList: [],
-      page: 1,
-      pageSize: 10,
-      total: 0
+      users: []
     }
   },
   created() {
-    this.fetchUserList()
+    this.fetchUsers()
   },
   methods: {
-    async fetchUserList() {
-      this.loading = true
+    async fetchUsers() {
       try {
-        // TODO: 调用接口获取用户列表
+        const res = await getUsers()
+        if (res.code === 200) {
+          this.users = res.data
+        }
       } catch (error) {
+        console.error('获取用户列表失败:', error)
         this.$message.error('获取用户列表失败')
-      } finally {
-        this.loading = false
       }
     },
-    handleSearch() {
-      this.page = 1
-      this.fetchUserList()
+    getRoleType(role) {
+      const roleMap = {
+        'ADMIN': 'danger',
+        'USER': 'success'
+      }
+      return roleMap[role] || 'info'
     },
-    handleEdit(row) {
-      // TODO: 实现编辑用户功能
+    getRoleText(role) {
+      const roleMap = {
+        'ADMIN': '管理员',
+        'USER': '普通用户'
+      }
+      return roleMap[role] || role
     },
-    handleToggleStatus(row) {
-      // TODO: 实现启用/禁用用户功能
+    formatDate(date) {
+      return formatDate(new Date(date))
     },
-    handlePageChange(page) {
-      this.page = page
-      this.fetchUserList()
+    handleDelete(user) {
+      this.$confirm('确认删除该用户?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        try {
+          const res = await deleteUser(user.id)
+          if (res.code === 200) {
+            this.$message.success('删除成功')
+            this.fetchUsers() // 重新加载列表
+          } else {
+            this.$message.error(res.msg || '删除失败')
+          }
+        } catch (error) {
+          console.error('删除用户失败:', error)
+          this.$message.error('删除用户失败')
+        }
+      }).catch(() => {
+        // 取消删除
+      })
+    },
+    getStatusText(status) {
+      const statusMap = {
+        '1': '正常',
+        '0': '禁用',
+        '-1': '已删除'
+      }
+      return statusMap[status] || '未知'
     }
   }
 }
 </script>
 
 <style scoped>
-.user-list {
-  padding: 20px;
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
-.pagination {
-  margin-top: 20px;
-  text-align: right;
+
+.user-detail {
+  display: flex;
+  flex-direction: column;
+}
+
+.nickname {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.openid {
+  font-size: 12px;
+  color: #909399;
+}
+
+.text-gray {
+  color: #909399;
 }
 </style> 

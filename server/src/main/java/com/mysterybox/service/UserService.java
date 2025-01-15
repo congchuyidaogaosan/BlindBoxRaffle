@@ -30,4 +30,9 @@ public interface UserService extends IService<User> {
      * @return 包含抽盒次数和获得款式数的统计数据
      */
     Map<String, Integer> getUserStats(Long userId);
+
+    /**
+     * 获取活跃用户数量（未删除的用户）
+     */
+    Long countActiveUsers();
 } 

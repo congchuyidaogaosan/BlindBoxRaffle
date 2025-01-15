@@ -18,8 +18,8 @@ public class OrderController {
     private OrderService orderService;
 
     @GetMapping("/list")
-    public Result<List<orders>> getOrders() {
-        List<orders> orders = orderService.getAllOrders();
+    public Result<List<OrderDTO>> getOrders() {
+        List<OrderDTO> orders = orderService.getAllOrdersWithDetails();
         return Result.success(orders);
     }
 

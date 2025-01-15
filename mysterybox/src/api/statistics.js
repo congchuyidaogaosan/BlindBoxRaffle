@@ -1,11 +1,10 @@
 import request from '@/utils/request'
 
 // 获取概览数据
-export function getOverview(params) {
+export function getOverview() {
   return request({
     url: '/api/statistics/overview',
-    method: 'get',
-    params
+    method: 'get'
   })
 }
 
