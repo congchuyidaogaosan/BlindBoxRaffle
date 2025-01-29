@@ -11,7 +11,7 @@
  Target Server Version : 80300
  File Encoding         : 65001
 
- Date: 09/01/2025 11:40:55
+ Date: 29/01/2025 10:27:19
 */
 
 SET NAMES utf8mb4;
@@ -150,9 +150,7 @@ CREATE TABLE `order_detail` (
   `create_time` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `order_id` (`order_id`),
-  KEY `box_style_id` (`box_style_id`),
-  CONSTRAINT `order_detail_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`),
-  CONSTRAINT `order_detail_ibfk_2` FOREIGN KEY (`box_style_id`) REFERENCES `box_style` (`id`)
+  KEY `box_style_id` (`box_style_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
@@ -192,35 +190,25 @@ CREATE TABLE `orders` (
   `status` varchar(20) NOT NULL,
   `create_time` datetime DEFAULT CURRENT_TIMESTAMP,
   `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `box_style_id` int DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`),
-  CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  KEY `user_id` (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1879205416324329479 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of orders
 -- ----------------------------
 BEGIN;
-INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `status`, `create_time`, `update_time`) VALUES (1, 2, 29.90, 'COMPLETED', '2025-01-02 10:58:28', '2025-01-02 10:58:28');
-INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `status`, `create_time`, `update_time`) VALUES (2, 2, 19.90, 'COMPLETED', '2025-01-02 10:58:28', '2025-01-02 10:58:28');
-INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `status`, `create_time`, `update_time`) VALUES (3, 3, 39.90, 'COMPLETED', '2025-01-02 10:58:28', '2025-01-02 10:58:28');
-INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `status`, `create_time`, `update_time`) VALUES (4, 4, 29.90, 'COMPLETED', '2025-01-02 10:58:28', '2025-01-02 10:58:28');
-INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `status`, `create_time`, `update_time`) VALUES (5, 5, 19.90, 'COMPLETED', '2025-01-02 10:58:28', '2025-01-02 10:58:28');
-INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `status`, `create_time`, `update_time`) VALUES (6, 6, 39.90, 'COMPLETED', '2025-01-02 10:58:28', '2025-01-02 10:58:28');
-INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `status`, `create_time`, `update_time`) VALUES (7, 7, 29.90, 'COMPLETED', '2025-01-02 10:58:28', '2025-01-02 10:58:28');
-INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `status`, `create_time`, `update_time`) VALUES (8, 8, 19.90, 'COMPLETED', '2025-01-02 10:58:28', '2025-01-02 10:58:28');
-INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `status`, `create_time`, `update_time`) VALUES (9, 9, 39.90, 'COMPLETED', '2025-01-02 10:58:28', '2025-01-02 10:58:28');
-INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `status`, `create_time`, `update_time`) VALUES (10, 10, 29.90, 'COMPLETED', '2025-01-02 10:58:28', '2025-01-02 10:58:28');
-INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `status`, `create_time`, `update_time`) VALUES (11, 11, 19.90, 'COMPLETED', '2025-01-02 10:58:28', '2025-01-02 10:58:28');
-INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `status`, `create_time`, `update_time`) VALUES (12, 12, 39.90, 'COMPLETED', '2025-01-02 10:58:28', '2025-01-02 10:58:28');
-INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `status`, `create_time`, `update_time`) VALUES (13, 13, 29.90, 'COMPLETED', '2025-01-02 10:58:28', '2025-01-02 10:58:28');
-INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `status`, `create_time`, `update_time`) VALUES (14, 14, 19.90, 'COMPLETED', '2025-01-02 10:58:28', '2025-01-02 10:58:28');
-INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `status`, `create_time`, `update_time`) VALUES (15, 15, 39.90, 'COMPLETED', '2025-01-02 10:58:28', '2025-01-02 10:58:28');
-INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `status`, `create_time`, `update_time`) VALUES (16, 16, 29.90, 'COMPLETED', '2025-01-02 10:58:28', '2025-01-02 10:58:28');
-INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `status`, `create_time`, `update_time`) VALUES (17, 17, 19.90, 'COMPLETED', '2025-01-02 10:58:28', '2025-01-02 10:58:28');
-INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `status`, `create_time`, `update_time`) VALUES (18, 18, 39.90, 'COMPLETED', '2025-01-02 10:58:28', '2025-01-02 10:58:28');
-INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `status`, `create_time`, `update_time`) VALUES (19, 19, 29.90, 'COMPLETED', '2025-01-02 10:58:28', '2025-01-02 10:58:28');
-INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `status`, `create_time`, `update_time`) VALUES (20, 20, 39.90, 'COMPLETED', '2025-01-02 10:58:28', '2025-01-02 10:58:28');
+INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `status`, `create_time`, `update_time`, `box_style_id`) VALUES (1736873103179, 22, 29.90, 'COMPLETED', '2025-01-15 00:45:03', '2025-01-15 00:45:03', 5);
+INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `status`, `create_time`, `update_time`, `box_style_id`) VALUES (1736873119708, 22, 29.90, 'COMPLETED', '2025-01-15 00:45:19', '2025-01-15 00:45:19', 5);
+INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `status`, `create_time`, `update_time`, `box_style_id`) VALUES (1736873138161, 22, 29.90, 'COMPLETED', '2025-01-15 00:45:38', '2025-01-15 00:45:38', 10);
+INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `status`, `create_time`, `update_time`, `box_style_id`) VALUES (1736873141675, 22, 29.90, 'COMPLETED', '2025-01-15 00:45:41', '2025-01-15 00:45:41', 10);
+INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `status`, `create_time`, `update_time`, `box_style_id`) VALUES (1736925783267, 22, 49.90, 'COMPLETED', '2025-01-15 15:23:03', '2025-01-15 15:23:03', 15);
+INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `status`, `create_time`, `update_time`, `box_style_id`) VALUES (1879205416324329474, 22, 29.90, 'COMPLETED', '2025-01-15 00:34:19', '2025-01-15 00:34:19', 5);
+INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `status`, `create_time`, `update_time`, `box_style_id`) VALUES (1879205416324329475, 22, 29.90, 'COMPLETED', '2025-01-15 00:38:54', '2025-01-15 00:38:54', 5);
+INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `status`, `create_time`, `update_time`, `box_style_id`) VALUES (1879205416324329476, 22, 29.90, 'COMPLETED', '2025-01-15 00:40:33', '2025-01-15 00:40:33', 5);
+INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `status`, `create_time`, `update_time`, `box_style_id`) VALUES (1879205416324329477, 22, 29.90, 'COMPLETED', '2025-01-15 00:42:15', '2025-01-15 00:42:15', 5);
+INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `status`, `create_time`, `update_time`, `box_style_id`) VALUES (1879205416324329478, 22, 29.90, 'COMPLETED', '2025-01-15 00:43:20', '2025-01-15 00:43:20', 5);
 COMMIT;
 
 -- ----------------------------
@@ -339,14 +327,14 @@ CREATE TABLE `user` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_open_id` (`open_id`),
   UNIQUE KEY `uk_username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
 BEGIN;
 INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `role`, `balance`, `open_id`, `sessionKey`, `nick_name`, `avatar_url`, `gender`, `country`, `province`, `city`, `language`, `status`, `last_login_time`, `create_time`, `update_time`) VALUES (1, 'admin', '$2a$10$znpMPOXjgnVACmYJR.HM5OzlHcnG.i/MVTDrvG2TKu9/7ZpKDrj/6', '管理员', '13800000000', 'ADMIN', 0.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '2025-01-02 10:58:28', '2025-01-04 18:52:23');
-INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `role`, `balance`, `open_id`, `sessionKey`, `nick_name`, `avatar_url`, `gender`, `country`, `province`, `city`, `language`, `status`, `last_login_time`, `create_time`, `update_time`) VALUES (2, 'user1', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '张三', '13800000001', 'USER', 100.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '2025-01-02 10:58:28', '2025-01-02 10:58:28');
+INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `role`, `balance`, `open_id`, `sessionKey`, `nick_name`, `avatar_url`, `gender`, `country`, `province`, `city`, `language`, `status`, `last_login_time`, `create_time`, `update_time`) VALUES (2, 'user1', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '张三', '13800000001', 'USER', 100.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, -1, NULL, '2025-01-02 10:58:28', '2025-01-02 10:58:28');
 INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `role`, `balance`, `open_id`, `sessionKey`, `nick_name`, `avatar_url`, `gender`, `country`, `province`, `city`, `language`, `status`, `last_login_time`, `create_time`, `update_time`) VALUES (3, 'user2', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '李四', '13800000002', 'USER', 200.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '2025-01-02 10:58:28', '2025-01-02 10:58:28');
 INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `role`, `balance`, `open_id`, `sessionKey`, `nick_name`, `avatar_url`, `gender`, `country`, `province`, `city`, `language`, `status`, `last_login_time`, `create_time`, `update_time`) VALUES (4, 'user3', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '王五', '13800000003', 'USER', 300.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '2025-01-02 10:58:28', '2025-01-02 10:58:28');
 INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `role`, `balance`, `open_id`, `sessionKey`, `nick_name`, `avatar_url`, `gender`, `country`, `province`, `city`, `language`, `status`, `last_login_time`, `create_time`, `update_time`) VALUES (5, 'user4', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '赵六', '13800000004', 'USER', 400.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '2025-01-02 10:58:28', '2025-01-02 10:58:28');
@@ -366,6 +354,7 @@ INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `role`, `
 INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `role`, `balance`, `open_id`, `sessionKey`, `nick_name`, `avatar_url`, `gender`, `country`, `province`, `city`, `language`, `status`, `last_login_time`, `create_time`, `update_time`) VALUES (19, 'user18', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '秦二十', '13800000018', 'USER', 1800.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '2025-01-02 10:58:28', '2025-01-02 10:58:28');
 INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `role`, `balance`, `open_id`, `sessionKey`, `nick_name`, `avatar_url`, `gender`, `country`, `province`, `city`, `language`, `status`, `last_login_time`, `create_time`, `update_time`) VALUES (20, 'user19', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '尤二一', '13800000019', 'USER', 1900.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '2025-01-02 10:58:28', '2025-01-02 10:58:28');
 INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `role`, `balance`, `open_id`, `sessionKey`, `nick_name`, `avatar_url`, `gender`, `country`, `province`, `city`, `language`, `status`, `last_login_time`, `create_time`, `update_time`) VALUES (21, 'user20', '$2a$10$NlZmXfP8X8X8X8X8X8X8X.2P.6NPGUNTEhPhwzQKmxwDnZ8Yj0y6q', '许二二', '13800000020', 'USER', 2000.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '2025-01-02 10:58:28', '2025-01-02 10:58:28');
+INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `role`, `balance`, `open_id`, `sessionKey`, `nick_name`, `avatar_url`, `gender`, `country`, `province`, `city`, `language`, `status`, `last_login_time`, `create_time`, `update_time`) VALUES (22, NULL, NULL, NULL, NULL, 'USER', 583.70, 'oEKiS6w8a-A3pQS41vtSAx1dVzd4', 'z/tuI29TEaF+XWAmBN+QdQ==', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL);
 COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;
