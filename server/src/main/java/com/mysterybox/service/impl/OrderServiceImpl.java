@@ -1,5 +1,6 @@
 package com.mysterybox.service.impl;
 
+import com.mysterybox.common.Result;
 import com.mysterybox.entity.OrderDetail;
 import com.mysterybox.entity.orders;
 import com.mysterybox.entity.BoxStyle;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -84,6 +86,8 @@ public class OrderServiceImpl implements OrderService {
 
     }
 
+
+
     //?作用 不懂
     @Override
     public List<OrderDetail> getOrderDetails(Long orderId) {
@@ -119,6 +123,12 @@ public class OrderServiceImpl implements OrderService {
             
             return dto;
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public Result list() {
+        List<HashMap<String, String>> hashMaps = orderMapper.motherOne();
+        return Result.success(hashMaps);
     }
 
     @Override

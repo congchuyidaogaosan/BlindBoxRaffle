@@ -1,5 +1,6 @@
 package com.mysterybox.service;
 
+import com.mysterybox.common.Result;
 import com.mysterybox.entity.OrderDetail;
 import com.mysterybox.entity.orders;
 import com.mysterybox.dto.OrderDTO;
@@ -19,4 +20,6 @@ public interface OrderService {
     void addOrderDetail(Long orderId, OrderDetail detail);
     List<OrderDetail> getOrderDetails(Long orderId);
     List<OrderDTO> getOrdersByUser(Long userId, String status);
+
+    Result list();
 } 
