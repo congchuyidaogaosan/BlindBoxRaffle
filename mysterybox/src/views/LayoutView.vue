@@ -38,10 +38,10 @@
             <span>用户管理</span>
           </el-menu-item>
 
-          <!-- <el-menu-item index="/statistics">
+          <el-menu-item index="/statistics">
             <i class="el-icon-data-line"></i>
             <span>数据统计</span>
-          </el-menu-item> -->
+          </el-menu-item>
         </el-menu>
       </el-aside>
 

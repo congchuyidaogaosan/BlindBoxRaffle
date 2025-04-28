@@ -1,90 +1,16 @@
 <template>
   <div class="statistics">
-    <el-card>
+    <el-card class="overview-chart">
       <div slot="header">
-        <el-form :inline="true">
-          <el-form-item label="时间范围">
-            <el-date-picker
-              v-model="dateRange"
-              type="daterange"
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              value-format="yyyy-MM-dd"
-              @change="handleDateChange"
-            />
-          </el-form-item>
-        </el-form>
+        <span>数据概览</span>
       </div>
-      <el-row :gutter="20">
-        <el-col :span="12">
-          <el-card shadow="hover">
-            <div slot="header">
-              <span>销售统计</span>
-            </div>
-            <div class="chart-container">
-              <v-chart 
-                :options="salesChartOptions"
-                :autoresize="true"
-              />
-            </div>
-          </el-card>
-        </el-col>
-        <el-col :span="12">
-          <el-card shadow="hover">
-            <div slot="header">
-              <span>用户增长</span>
-            </div>
-            <div class="chart-container">
-              <v-chart 
-                :options="userChartOptions"
-                :autoresize="true"
-              />
-            </div>
-          </el-card>
-        </el-col>
-      </el-row>
-
-      <el-row :gutter="20" style="margin-top: 20px">
-        <el-col :span="12">
-          <el-card shadow="hover">
-            <div slot="header">
-              <span>系列销量排行</span>
-            </div>
-            <el-table :data="seriesRanking" size="small" v-loading="loading">
-              <el-table-column prop="name" label="系列名称" />
-              <el-table-column prop="sales" label="销量" width="100" />
-              <el-table-column prop="amount" label="销售额" width="120">
-                <template slot-scope="scope">
-                  ¥{{ scope.row.amount }}
-                </template>
-              </el-table-column>
-            </el-table>
-          </el-card>
-        </el-col>
-        <el-col :span="12">
-          <el-card shadow="hover">
-            <div slot="header">
-              <span>款式中奖率</span>
-            </div>
-            <el-table :data="styleRanking" size="small" v-loading="loading">
-              <el-table-column prop="name" label="款式名称" />
-              <el-table-column prop="drawCount" label="抽中次数" width="100" />
-              <el-table-column prop="probability" label="中奖率" width="100">
-                <template slot-scope="scope">
-                  {{ scope.row.probability }}%
-                </template>
-              </el-table-column>
-            </el-table>
-          </el-card>
-        </el-col>
-      </el-row>
+      <div id="overviewChart" style="width: 100%; height: 400px;"></div>
     </el-card>
   </div>
 </template>
 
 <script>
-import { getOverview, getDrawPreferences, getPopularStyles } from '@/api/statistics'
+import { getOverview } from '@/api/statistics'
 import * as echarts from 'echarts'
 import { use } from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
@@ -180,21 +106,31 @@ export default {
   },
   created() {
     this.fetchData()
+    this.fetchOverview()
+  },
+  mounted() {
+    window.addEventListener('resize', this.resizeChart)
+  },
+  beforeUnmount() {
+    window.removeEventListener('resize', this.resizeChart)
+    const chart = echarts.getInstanceByDom(document.getElementById('overviewChart'))
+    if (chart) {
+      chart.dispose()
+    }
   },
   methods: {
+    resizeChart() {
+      const chart = echarts.getInstanceByDom(document.getElementById('overviewChart'))
+      if (chart) {
+        chart.resize()
+      }
+    },
     async fetchData() {
       this.loading = true
       try {
         // 获取概览数据
-        const [overviewRes, preferencesRes, popularRes] = await Promise.all([
-          getOverview({
-            startDate: this.dateRange[0],
-            endDate: this.dateRange[1]
-          }),
-          getDrawPreferences(),
-          getPopularStyles()
-        ])
-
+        const overviewRes = await getOverview()
+        console.log(overviewRes)
         // 更新销售趋势图表
         const salesData = overviewRes.data.salesTrend || []
         this.salesChartOptions.xAxis.data = salesData.map(item => item.date)
@@ -206,10 +142,10 @@ export default {
         this.userChartOptions.series[0].data = userData.map(item => item.count)
 
         // 更新系列排行
-        this.seriesRanking = popularRes.data
+        this.seriesRanking = overviewRes.data.seriesRanking
 
         // 更新款式中奖率
-        this.styleRanking = preferencesRes.data
+        this.styleRanking = overviewRes.data.styleRanking
 
       } catch (error) {
         this.$message.error('获取统计数据失败')
@@ -219,6 +155,97 @@ export default {
     },
     handleDateChange() {
       this.fetchData()
+    },
+    updateOverviewChart(data) {
+      const option = {
+        title: {
+          text: '订单与销售额统计',
+          left: 'center'
+        },
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'shadow'
+          },
+          formatter: function(params) {
+            let result = params[0].name + '<br/>';
+            params.forEach(param => {
+              const value = param.seriesName === '订单数' ? param.value + ' 单' : '¥' + param.value;
+              result += param.marker + param.seriesName + ': ' + value + '<br/>';
+            });
+            return result;
+          }
+        },
+        legend: {
+          data: ['订单数', '销售额'],
+          top: 30
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true,
+          top: 80
+        },
+        xAxis: {
+          type: 'category',
+          data: ['组别1', '组别2'],
+          axisLabel: {
+            interval: 0
+          }
+        },
+        yAxis: [
+          {
+            type: 'value',
+            name: '订单数',
+            position: 'left',
+            axisLabel: {
+              formatter: '{value} 单'
+            }
+          },
+          {
+            type: 'value',
+            name: '销售额',
+            position: 'right',
+            axisLabel: {
+              formatter: '¥{value}'
+            }
+          }
+        ],
+        series: [
+          {
+            name: '订单数',
+            type: 'bar',
+            data: data.map(item => item.sheets),
+            itemStyle: {
+              color: '#409EFF'
+            }
+          },
+          {
+            name: '销售额',
+            type: 'bar',
+            yAxisIndex: 1,
+            data: data.map(item => item.totalmoney),
+            itemStyle: {
+              color: '#67C23A'
+            }
+          }
+        ]
+      };
+      
+      const chart = echarts.init(document.getElementById('overviewChart'));
+      chart.setOption(option);
+    },
+    
+    async fetchOverview() {
+      try {
+        const overviewRes = await getOverview()
+        if (overviewRes.code === 200) {
+          this.updateOverviewChart(overviewRes.data)
+        }
+      } catch (error) {
+        console.error('获取概览数据失败:', error)
+      }
     }
   }
 }
