@@ -40,6 +40,13 @@ const routes = [
         component: () => import('@/views/orders/OrderListView.vue'),
         meta: { title: '订单列表' }
       },
+      // 评论管理
+      {
+        path: 'comments',
+        name: 'Comments',
+        component: () => import('@/views/comments/CommentListView.vue'),
+        meta: { title: '评论列表' }
+      },
       {
         path: 'users',
         name: 'Users',

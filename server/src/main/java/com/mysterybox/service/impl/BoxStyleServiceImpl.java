@@ -58,4 +58,9 @@ public class BoxStyleServiceImpl implements BoxStyleService {
             .orderByDesc("sales")
             .last("LIMIT " + limit));
     }
+
+    @Override
+    public BoxStyle getByid(Long boxStyleId) {
+        return boxStyleMapper.selectById(boxStyleId);
+    }
 }

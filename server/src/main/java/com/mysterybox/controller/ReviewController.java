@@ -2,8 +2,10 @@ package com.mysterybox.controller;
 
 
 import com.mysterybox.dto.Review;
+import com.mysterybox.service.BoxStyleService;
 import com.mysterybox.service.ReviewService;
 import com.mysterybox.common.Result;
+import com.mysterybox.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +15,11 @@ import java.util.List;
 @RequestMapping("/api/Review")
 public class ReviewController {
 
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private BoxStyleService boxStyleService;
 
 
     @Autowired
@@ -39,6 +46,14 @@ public class ReviewController {
     public Result<List<Review>> getUsers() {
         try {
             List<Review> list = reviewService.list();
+
+            for (Review review:list){
+                review.setBoxStyle(boxStyleService.getByid(review.getBoxStyleId()));
+                review.setUser(userService.getById(review.getUserId()));
+            }
+
+
+
             return Result.success(list);
         } catch (Exception e) {
             return Result.error("获取用户列表失败: " + e.getMessage());

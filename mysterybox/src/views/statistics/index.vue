@@ -157,27 +157,9 @@ export default {
       this.fetchData()
     },
     updateOverviewChart(data) {
-      // 按系列分组统计数据
-      const seriesStats = data.reduce((acc, order) => {
-        const seriesName = order.seriesName;
-        if (!acc[seriesName]) {
-          acc[seriesName] = {
-            orders: 0,
-            sales: 0
-          };
-        }
-        acc[seriesName].orders++;
-        acc[seriesName].sales += order.totalAmount;
-        return acc;
-      }, {});
-
-      const series = Object.keys(seriesStats);
-      const orders = series.map(name => seriesStats[name].orders);
-      const sales = series.map(name => seriesStats[name].sales);
-
       const option = {
         title: {
-          text: '系列订单与销售额统计',
+          text: '订单与销售额统计',
           left: 'center'
         },
         tooltip: {
@@ -188,7 +170,7 @@ export default {
           formatter: function(params) {
             let result = params[0].name + '<br/>';
             params.forEach(param => {
-              const value = param.seriesName === '订单数' ? param.value + ' 单' : '¥' + param.value.toFixed(2);
+              const value = param.seriesName === '订单数' ? param.value + ' 单' : '¥' + param.value;
               result += param.marker + param.seriesName + ': ' + value + '<br/>';
             });
             return result;
@@ -207,10 +189,9 @@ export default {
         },
         xAxis: {
           type: 'category',
-          data: series,
+          data: ['组别1', '组别2'],
           axisLabel: {
-            interval: 0,
-            rotate: 30
+            interval: 0
           }
         },
         yAxis: [
@@ -235,7 +216,7 @@ export default {
           {
             name: '订单数',
             type: 'bar',
-            data: orders,
+            data: data.map(item => item.sheets),
             itemStyle: {
               color: '#409EFF'
             }
@@ -244,7 +225,7 @@ export default {
             name: '销售额',
             type: 'bar',
             yAxisIndex: 1,
-            data: sales,
+            data: data.map(item => item.totalmoney),
             itemStyle: {
               color: '#67C23A'
             }

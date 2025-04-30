@@ -7,6 +7,8 @@ import com.mysterybox.dto.DrawPreference;
 import com.mysterybox.dto.PopularStyle;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+
 import java.util.List;
 
 @Mapper
@@ -24,4 +26,8 @@ public interface BoxStyleMapper extends BaseMapper<BoxStyle> {
     void delete(@Param("id") Long id);
     List<DrawPreference> findDrawPreferences();
     List<PopularStyle> findPopularStyles();
+
+    @Select("select * from box_style where id=#{id}")
+    BoxStyle selectById(@Param("id") Long id);
+
 } 

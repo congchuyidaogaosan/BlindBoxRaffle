@@ -6,6 +6,9 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
+
+import com.mysterybox.entity.BoxStyle;
+import com.mysterybox.entity.User;
 import lombok.Data;
 
 /**
@@ -45,6 +48,11 @@ public class Review implements Serializable {
      * 
      */
     private Date createTime;
+
+    @TableField(exist = false)
+    private BoxStyle boxStyle;
+    @TableField(exist = false)
+    private User user;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
@@ -98,4 +106,5 @@ public class Review implements Serializable {
         sb.append("]");
         return sb.toString();
     }
+
 }

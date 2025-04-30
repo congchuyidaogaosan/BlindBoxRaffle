@@ -13,4 +13,7 @@ public interface BoxStyleService {
     BoxStyle updateStyle(BoxStyle style);
     void deleteStyle(Long id);
     List<BoxStyle> getHotStyles(int limit);
+
+
+    BoxStyle getByid(Long boxStyleId);
 } 

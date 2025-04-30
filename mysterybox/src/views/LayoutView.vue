@@ -32,6 +32,15 @@
             <el-menu-item index="/orders">订单列表</el-menu-item>
 
           </el-submenu>
+          <!--评论管理 -->
+          <el-submenu index="3">
+            <template slot="title">
+              <i class="el-icon-chat-dot-round"></i>
+              <span>评论管理</span>
+            </template>
+            <el-menu-item index="/comments">评论列表</el-menu-item>
+          </el-submenu>
+          <!--用户管理 -->
 
           <el-menu-item index="/users">
             <i class="el-icon-user"></i>
