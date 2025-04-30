@@ -37,13 +37,40 @@
         />
         <view class="style-info">
           <text class="style-name">{{item.styleName}}</text>
+          <text class="series-name">{{item.seriesName}}</text>
           <text class="style-price">¥{{item.totalAmount}}</text>
+        </view>
+      </view>
+
+      <!-- 评论列表 -->
+      <view class="reviews-section" wx:if="{{item.reviews && item.reviews.length > 0}}">
+        <view class="reviews-title">用户评价</view>
+        <view class="review-item" wx:for="{{item.reviews}}" wx:key="id" wx:for-item="review">
+          <view class="review-header">
+            <view class="review-rating">
+              <text class="star {{index < review.rating ? 'active' : ''}}" 
+                wx:for="{{5}}" 
+                wx:key="*this"
+                wx:for-item="starIndex"
+              >★</text>
+            </view>
+            <text class="review-time">{{review.createTime}}</text>
+          </view>
+          <text class="review-content">{{review.content}}</text>
         </view>
       </view>
 
       <view class="order-footer">
         <text class="order-time">{{item.createTime}}</text>
         <view class="order-actions">
+          <button 
+            class="review-btn"
+            size="mini"
+            wx:if="{{item.status === 'COMPLETED' && !item.hasReview}}"
+            data-id="{{item.id}}"
+            data-style-id="{{item.styleId}}"
+            bindtap="handleReview"
+          >评价</button>
           <button 
             class="cancel-btn"
             size="mini"
@@ -63,4 +90,41 @@
       <text>暂无订单</text>
     </view>
   </scroll-view>
+
+  <!-- 评分弹窗 -->
+  <view class="review-modal" wx:if="{{showReviewModal}}">
+    <view class="modal-content">
+      <view class="modal-header">
+        <text class="modal-title">商品评价</text>
+        <text class="modal-close" bindtap="closeReviewModal">×</text>
+      </view>
+      
+      <view class="rating-section">
+        <text class="rating-title">商品评分</text>
+        <view class="stars">
+          <text 
+            class="star {{index < rating ? 'active' : ''}}" 
+            wx:for="{{5}}" 
+            wx:key="*this"
+            data-rating="{{index + 1}}"
+            bindtap="handleRating"
+          >★</text>
+        </view>
+      </view>
+
+      <view class="comment-section">
+        <text class="comment-title">评价内容</text>
+        <textarea 
+          class="comment-input"
+          placeholder="请输入您的评价内容"
+          value="{{commentContent}}"
+          bindinput="handleCommentInput"
+        ></textarea>
+      </view>
+
+      <view class="modal-footer">
+        <button class="submit-btn" bindtap="submitReview">提交评价</button>
+      </view>
+    </view>
+  </view>
 </view>

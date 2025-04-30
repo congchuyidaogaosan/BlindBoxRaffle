@@ -1,5 +1,8 @@
 package com.mysterybox.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.mysterybox.dto.Review;
+import com.mysterybox.service.ReviewService;
 import com.mysterybox.common.Result;
 import com.mysterybox.dto.OrderDTO;
 import com.mysterybox.entity.orders;
@@ -16,6 +19,9 @@ public class OrderController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private ReviewService reviewService;
 
     @GetMapping("/list")
     public Result<List<OrderDTO>> getOrders() {
@@ -57,6 +63,15 @@ public class OrderController {
             @RequestParam(required = false, defaultValue = "ALL") String status) {
         try {
             List<OrderDTO> orders = orderService.getOrdersByUser(userId, status);
+
+            for (OrderDTO order : orders) {
+                Long styleId = order.getStyleId();
+                List<Review> list = reviewService.list(new QueryWrapper<Review>().eq("box_style_id",styleId));
+                order.setReviews(list);
+            }
+
+
+            System.out.println(orders);
             return Result.success(orders);
         } catch (Exception e) {
             return Result.error("获取订单列表失败: " + e.getMessage());

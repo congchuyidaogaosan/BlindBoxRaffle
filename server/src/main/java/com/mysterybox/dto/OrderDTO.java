@@ -1,10 +1,9 @@
 package com.mysterybox.dto;
 
-import com.mysterybox.entity.BoxSeries;
-import com.mysterybox.entity.BoxStyle;
 import lombok.Data;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class OrderDTO {
@@ -25,4 +24,6 @@ public class OrderDTO {
     private Long seriesId;
     private String seriesName;
     private String seriesDescription;
+
+    private   List<Review>reviews;
 } 

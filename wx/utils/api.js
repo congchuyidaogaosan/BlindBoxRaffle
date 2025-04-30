@@ -131,5 +131,12 @@ export function getUserStats(userId) {
   })
 }
 
-
+// 提交评论
+export const submitReview = (data) => {
+  return request({
+    url: '/Review/add',
+    method: 'POST',
+    data
+  })
+}
   

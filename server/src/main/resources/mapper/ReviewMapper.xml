@@ -1,65 +1,20 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.mysterybox.mapper.ReviewMapper">
-    <resultMap id="reviewMap" type="com.mysterybox.entity.Review">
-        <id property="id" column="id"/>
-        <result property="content" column="content"/>
-        <result property="rating" column="rating"/>
-        <result property="createTime" column="create_time"/>
-        <association property="user" javaType="com.mysterybox.entity.User">
-            <id property="id" column="user_id"/>
-            <result property="nickname" column="nickname"/>
-        </association>
-        <association property="boxStyle" javaType="com.mysterybox.entity.BoxStyle">
-            <id property="id" column="style_id"/>
-            <result property="name" column="style_name"/>
-        </association>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mysterybox.mapper.StatisticsMapper.ReviewMapper">
+
+    <resultMap id="BaseResultMap" type="com.mysterybox.dto.Review">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="userId" column="user_id" jdbcType="BIGINT"/>
+            <result property="boxStyleId" column="box_style_id" jdbcType="BIGINT"/>
+            <result property="content" column="content" jdbcType="VARCHAR"/>
+            <result property="rating" column="rating" jdbcType="INTEGER"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
-    <select id="findAll" resultMap="reviewMap">
-        SELECT r.*, u.nickname, bs.name as style_name
-        FROM review r
-        LEFT JOIN user u ON r.user_id = u.id
-        LEFT JOIN box_style bs ON r.box_style_id = bs.id
-    </select>
-    
-    <select id="findById" resultMap="reviewMap">
-        SELECT r.*, u.nickname, bs.name as style_name
-        FROM review r
-        LEFT JOIN user u ON r.user_id = u.id
-        LEFT JOIN box_style bs ON r.box_style_id = bs.id
-        WHERE r.id = #{id}
-    </select>
-    
-    <select id="findByUserId" resultMap="reviewMap">
-        SELECT r.*, u.nickname, bs.name as style_name
-        FROM review r
-        LEFT JOIN user u ON r.user_id = u.id
-        LEFT JOIN box_style bs ON r.box_style_id = bs.id
-        WHERE r.user_id = #{userId}
-    </select>
-    
-    <select id="findByStyleId" resultMap="reviewMap">
-        SELECT r.*, u.nickname, bs.name as style_name
-        FROM review r
-        LEFT JOIN user u ON r.user_id = u.id
-        LEFT JOIN box_style bs ON r.box_style_id = bs.id
-        WHERE r.box_style_id = #{styleId}
-    </select>
-    
-    <insert id="insert" parameterType="com.mysterybox.entity.Review" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO review (user_id, box_style_id, content, rating)
-        VALUES (#{user.id}, #{boxStyle.id}, #{content}, #{rating})
-    </insert>
-    
-    <update id="update" parameterType="com.mysterybox.entity.Review">
-        UPDATE review
-        SET content = #{content},
-            rating = #{rating}
-        WHERE id = #{id}
-    </update>
-    
-    <delete id="delete">
-        DELETE FROM review WHERE id = #{id}
-    </delete>
-</mapper> 
+    <sql id="Base_Column_List">
+        id,user_id,box_style_id,
+        content,rating,create_time
+    </sql>
+</mapper>

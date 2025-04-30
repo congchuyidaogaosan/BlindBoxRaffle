@@ -1,5 +1,5 @@
 // pages/user/orders.js
-import { getOrderList, cancelOrder } from '../../utils/api'
+import { getOrderList, cancelOrder, submitReview } from '../../utils/api'
 
 Page({
 
@@ -9,8 +9,13 @@ Page({
   data: {
     orderList: [],
     loading: false,
-    // currentTab: 0, // 0:全部 1:待付款 2:已完成 3:已取消
-    // tabs: ['全部', '已完成', '已取消']
+    currentTab: 0,
+    tabs: ['全部', '已完成', '已取消'],
+    showReviewModal: false,
+    rating: 0,
+    commentContent: '',
+    currentOrderId: null,
+    currentStyleId: null
   },
 
   /**
@@ -125,6 +130,90 @@ Page({
       console.error('取消订单失败:', error)
       wx.showToast({
         title: '取消失败',
+        icon: 'none'
+      })
+    }
+  },
+
+  // 处理评价
+  handleReview(e) {
+    const { id, styleId } = e.currentTarget.dataset
+    this.setData({
+      showReviewModal: true,
+      currentOrderId: id,
+      currentStyleId: styleId,
+      rating: 0,
+      commentContent: ''
+    })
+  },
+
+  // 关闭评价弹窗
+  closeReviewModal() {
+    this.setData({
+      showReviewModal: false,
+      currentOrderId: null,
+      currentStyleId: null,
+      rating: 0,
+      commentContent: ''
+    })
+  },
+
+  // 处理评分
+  handleRating(e) {
+    const rating = e.currentTarget.dataset.rating
+    this.setData({ rating })
+  },
+
+  // 处理评价内容输入
+  handleCommentInput(e) {
+    this.setData({
+      commentContent: e.detail.value
+    })
+  },
+
+  // 提交评价
+  async submitReview() {
+    const { currentOrderId, currentStyleId, rating, commentContent } = this.data
+    const userInfo = getApp().globalData.userInfo
+    
+    if (rating === 0) {
+      wx.showToast({
+        title: '请选择评分',
+        icon: 'none'
+      })
+      return
+    }
+
+    if (!commentContent.trim()) {
+      wx.showToast({
+        title: '请输入评价内容',
+        icon: 'none'
+      })
+      return
+    }
+
+    try {
+      // 这里需要调用评价接口
+      await submitReview({
+        userId: userInfo.id,
+        boxStyleId: currentStyleId,
+        content: commentContent,
+        rating: rating
+      })
+      
+      wx.showToast({
+        title: '评价成功',
+        icon: 'success'
+      })
+      
+      this.closeReviewModal()
+      // 刷新订单列表
+      this.fetchOrders()
+      
+    } catch (error) {
+      console.error('评价失败:', error)
+      wx.showToast({
+        title: '评价失败',
         icon: 'none'
       })
     }

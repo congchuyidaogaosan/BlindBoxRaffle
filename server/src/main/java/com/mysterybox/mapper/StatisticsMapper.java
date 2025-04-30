@@ -1,12 +1,10 @@
 package com.mysterybox.mapper;
 
-import com.alibaba.druid.support.spring.stat.annotation.Stat;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.mysterybox.dto.DrawPreference;
 import com.mysterybox.dto.PopularStyle;
+import com.mysterybox.dto.Review;
 import com.mysterybox.dto.SalesTrend;
-import com.mysterybox.entity.BoxSeries;
-import com.sun.org.glassfish.external.statistics.Statistic;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -47,9 +45,13 @@ public interface StatisticsMapper {
     Double getusers(String date);
 
 
+    /**
+    * @author tian
+    * @description 针对表【review】的数据库操作Mapper
+    * @createDate 2025-04-30 11:41:55
+    * @Entity com.mysterybox.dto.Review
+    */
+    interface ReviewMapper extends BaseMapper<Review> {
 
-
-
-
-
-} 
+    }
+}
