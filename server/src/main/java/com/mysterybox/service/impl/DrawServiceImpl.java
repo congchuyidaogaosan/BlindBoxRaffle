@@ -72,6 +72,24 @@ public class DrawServiceImpl implements DrawService {
             return null;
         }
 
+        // 验证概率
+        double totalProbability = 0;
+        for (BoxStyle style : styles) {
+            if (style.getProbability() == null || style.getProbability().doubleValue() < 0) {
+                throw new RuntimeException("款式概率设置错误");
+            }
+            totalProbability += style.getProbability().doubleValue();
+        }
+
+        // 如果概率总和不为100%，进行归一化处理
+        if (Math.abs(totalProbability - 100.0) > 0.01) {
+            for (BoxStyle style : styles) {
+                double normalizedProbability = (style.getProbability().doubleValue() / totalProbability) * 100;
+                style.setProbability(BigDecimal.valueOf(normalizedProbability));
+            }
+        }
+
+        // 生成随机数并选择款式
         double randomValue = random.nextDouble() * 100;
         double currentSum = 0;
 
@@ -82,6 +100,7 @@ public class DrawServiceImpl implements DrawService {
             }
         }
 
+        // 如果由于浮点数精度问题没有选中任何款式，返回最后一个
         return styles.get(styles.size() - 1);
     }
 
