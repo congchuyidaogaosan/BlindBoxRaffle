@@ -182,4 +182,16 @@ border-radius: 30rpx;
 /* 点击效果 */
 .menu-item:active {
   background: #f9f9f9;
+}
+
+.menu-item.logout {
+  color: #ff4d4f;
+}
+
+.menu-item.logout .text {
+  color: #ff4d4f;
+}
+
+.menu-item.logout .icon {
+  filter: brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%);
 } 

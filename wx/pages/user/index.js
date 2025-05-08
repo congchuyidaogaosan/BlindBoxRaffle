@@ -131,6 +131,34 @@ Page({
       stats: res.data || {}
     })
 
-  }
-  
+  },
+
+  handleLogout() {
+    wx.showModal({
+      title: '提示',
+      content: '确定要退出登录吗？',
+      success: (res) => {
+        if (res.confirm) {
+          // 清除本地存储的用户信息
+          wx.removeStorageSync('token')
+          wx.removeStorageSync('userInfo')
+          
+          // 重置页面数据
+          this.setData({
+            userInfo: null,
+            balance: '0.00',
+            stats: {
+              drawCount: 0,
+              boxCount: 0
+            }
+          })
+          
+          // 跳转到登录页
+          wx.navigateTo({
+            url: '/pages/login/index'
+          })
+        }
+      }
+    })
+  },
 }) 
